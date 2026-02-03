@@ -1,24 +1,51 @@
 import Foundation
 import CoreData
 
+protocol HistoryRecordStore {
+    func fetchRecords() throws -> [AttendanceRecord]
+    func delete(_ record: AttendanceRecord) throws
+}
+
+final class CoreDataHistoryRecordStore: HistoryRecordStore {
+    private let context: NSManagedObjectContext
+
+    init(context: NSManagedObjectContext) {
+        self.context = context
+    }
+
+    func fetchRecords() throws -> [AttendanceRecord] {
+        let request = AttendanceRecord.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(key: "entryTime", ascending: false)]
+        return try context.fetch(request)
+    }
+
+    func delete(_ record: AttendanceRecord) throws {
+        context.delete(record)
+        try context.save()
+    }
+}
+
 @MainActor
 public final class HistoryViewModel: ObservableObject {
     @Published private(set) var records: [AttendanceRecord] = []
     @Published private(set) var groupedRecords: [Date: [AttendanceRecord]] = [:]
     @Published private(set) var errorMessage: String?
 
-    private let context: NSManagedObjectContext
+    private let store: HistoryRecordStore
 
     public init(context: NSManagedObjectContext) {
-        self.context = context
+        self.store = CoreDataHistoryRecordStore(context: context)
+        fetchRecords()
+    }
+
+    init(store: HistoryRecordStore) {
+        self.store = store
         fetchRecords()
     }
 
     public func fetchRecords() {
         do {
-            let request = AttendanceRecord.fetchRequest()
-            request.sortDescriptors = [NSSortDescriptor(key: "entryTime", ascending: false)]
-            records = try context.fetch(request)
+            records = try store.fetchRecords()
             groupRecordsByDate()
             errorMessage = nil
         } catch {
@@ -51,9 +78,8 @@ public final class HistoryViewModel: ObservableObject {
     }
 
     public func deleteRecord(_ record: AttendanceRecord) {
-        context.delete(record)
         do {
-            try context.save()
+            try store.delete(record)
             fetchRecords()
         } catch {
             errorMessage = error.localizedDescription

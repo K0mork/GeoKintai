@@ -3,6 +3,37 @@ import XCTest
 
 @MainActor
 final class HistoryViewModelTests: XCTestCase {
+    @MainActor
+    private final class FailingHistoryStore: HistoryRecordStore {
+        let error = NSError(domain: "HistoryViewModelTests", code: 1, userInfo: [NSLocalizedDescriptionKey: "fetch failed"])
+
+        func fetchRecords() throws -> [AttendanceRecord] {
+            throw error
+        }
+
+        func delete(_ record: AttendanceRecord) throws {
+            throw error
+        }
+    }
+
+    @MainActor
+    private final class DeleteFailingHistoryStore: HistoryRecordStore {
+        let record: AttendanceRecord
+        let error = NSError(domain: "HistoryViewModelTests", code: 2, userInfo: [NSLocalizedDescriptionKey: "delete failed"])
+
+        init(record: AttendanceRecord) {
+            self.record = record
+        }
+
+        func fetchRecords() throws -> [AttendanceRecord] {
+            [record]
+        }
+
+        func delete(_ record: AttendanceRecord) throws {
+            throw error
+        }
+    }
+
     var controller: PersistenceController!
     var attendanceRepository: AttendanceRepository!
     var viewModel: HistoryViewModel!
@@ -134,6 +165,23 @@ final class HistoryViewModelTests: XCTestCase {
         viewModel.fetchRecords()
 
         XCTAssertNil(viewModel.errorMessage)
+    }
+
+    func testFetchRecordsFailureSetsErrorAndClearsData() {
+        let vm = HistoryViewModel(store: FailingHistoryStore())
+
+        XCTAssertTrue(vm.records.isEmpty)
+        XCTAssertTrue(vm.groupedRecords.isEmpty)
+        XCTAssertEqual(vm.errorMessage, "fetch failed")
+    }
+
+    func testDeleteRecordFailureSetsError() throws {
+        let record = try attendanceRepository.checkIn(workplaceId: UUID())
+        let vm = HistoryViewModel(store: DeleteFailingHistoryStore(record: record))
+
+        vm.deleteRecord(record)
+
+        XCTAssertEqual(vm.errorMessage, "delete failed")
     }
 
     // MARK: - Multiple Workplaces Tests

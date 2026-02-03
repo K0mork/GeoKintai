@@ -332,6 +332,60 @@ final class LocationManagerWrapperTests: XCTestCase {
         XCTAssertEqual(mockDelegate.exitCallCount, 0)
     }
 
+    @MainActor
+    func testCompleteVerificationConfirmsEntryAtThreshold() {
+        let mockManager = MockLocationManager()
+        let mockApp = MockApplication()
+        let mockDelegate = MockLocationManagerDelegate()
+        let wrapper = LocationManagerWrapper(locationManager: mockManager, application: mockApp)
+        wrapper.delegate = mockDelegate
+
+        let region = CLCircularRegion(center: CLLocationCoordinate2D(latitude: 35.0, longitude: 139.0), radius: 100, identifier: "workplace1")
+        mockManager.monitoredRegions.insert(region)
+
+        wrapper.handleDidEnterRegion(region)
+
+        let insideLocations = (0..<7).map { _ in
+            CLLocation(latitude: 35.0, longitude: 139.0)
+        }
+        let outsideLocations = (0..<3).map { _ in
+            CLLocation(latitude: 40.0, longitude: 145.0)
+        }
+        wrapper.handleDidUpdateLocations(insideLocations + outsideLocations)
+
+        wrapper.completeVerification()
+
+        XCTAssertEqual(mockDelegate.confirmedEntryRegionId, "workplace1")
+        XCTAssertEqual(mockDelegate.entryCallCount, 1)
+    }
+
+    @MainActor
+    func testCompleteVerificationDoesNotConfirmEntryBelowThreshold() {
+        let mockManager = MockLocationManager()
+        let mockApp = MockApplication()
+        let mockDelegate = MockLocationManagerDelegate()
+        let wrapper = LocationManagerWrapper(locationManager: mockManager, application: mockApp)
+        wrapper.delegate = mockDelegate
+
+        let region = CLCircularRegion(center: CLLocationCoordinate2D(latitude: 35.0, longitude: 139.0), radius: 100, identifier: "workplace1")
+        mockManager.monitoredRegions.insert(region)
+
+        wrapper.handleDidEnterRegion(region)
+
+        let insideLocations = (0..<6).map { _ in
+            CLLocation(latitude: 35.0, longitude: 139.0)
+        }
+        let outsideLocations = (0..<4).map { _ in
+            CLLocation(latitude: 40.0, longitude: 145.0)
+        }
+        wrapper.handleDidUpdateLocations(insideLocations + outsideLocations)
+
+        wrapper.completeVerification()
+
+        XCTAssertNil(mockDelegate.confirmedEntryRegionId)
+        XCTAssertEqual(mockDelegate.entryCallCount, 0)
+    }
+
     // MARK: - State Tests
 
     @MainActor
@@ -352,6 +406,23 @@ final class LocationManagerWrapperTests: XCTestCase {
     func testGetLocationsReturnsEmptyArrayInitially() {
         let mockManager = MockLocationManager()
         let wrapper = LocationManagerWrapper(locationManager: mockManager, application: MockApplication())
+        XCTAssertTrue(wrapper.getLocations().isEmpty)
+    }
+
+    @MainActor
+    func testCompleteVerificationClearsState() {
+        let mockManager = MockLocationManager()
+        let wrapper = LocationManagerWrapper(locationManager: mockManager, application: MockApplication())
+
+        let region = CLCircularRegion(center: CLLocationCoordinate2D(latitude: 35.0, longitude: 139.0), radius: 100, identifier: "test")
+        mockManager.monitoredRegions.insert(region)
+
+        wrapper.handleDidEnterRegion(region)
+        wrapper.handleDidUpdateLocations([CLLocation(latitude: 35.0, longitude: 139.0)])
+        wrapper.completeVerification()
+
+        XCTAssertFalse(wrapper.isVerifying())
+        XCTAssertNil(wrapper.getCurrentRegionId())
         XCTAssertTrue(wrapper.getLocations().isEmpty)
     }
 

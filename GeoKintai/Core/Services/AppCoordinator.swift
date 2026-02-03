@@ -8,21 +8,25 @@ public final class AppCoordinator: NSObject, LocationManagerWrapperDelegate {
 
     private let persistenceController: PersistenceController
     private let locationManager: LocationManagerWrapper
-    private lazy var attendanceRepository: AttendanceRepository = {
-        AttendanceRepository(context: persistenceController.viewContext)
-    }()
-    private lazy var locationProofRepository: LocationProofRepository = {
-        LocationProofRepository(context: persistenceController.viewContext)
-    }()
-    private lazy var workplaceRepository: WorkplaceRepository = {
-        WorkplaceRepository(context: persistenceController.viewContext)
-    }()
+    private let attendanceRepository: AttendanceRepository
+    private let locationProofRepository: LocationProofRepository
+    private let workplaceRepository: WorkplaceRepository
 
     private var activeRecords: [String: AttendanceRecord] = [:]
 
-    private override init() {
-        self.persistenceController = PersistenceController.shared
-        self.locationManager = LocationManagerWrapper()
+    init(
+        persistenceController: PersistenceController = PersistenceController.shared,
+        locationManager: LocationManagerWrapper = LocationManagerWrapper(),
+        attendanceRepository: AttendanceRepository? = nil,
+        locationProofRepository: LocationProofRepository? = nil,
+        workplaceRepository: WorkplaceRepository? = nil
+    ) {
+        self.persistenceController = persistenceController
+        self.locationManager = locationManager
+        let context = persistenceController.viewContext
+        self.attendanceRepository = attendanceRepository ?? AttendanceRepository(context: context)
+        self.locationProofRepository = locationProofRepository ?? LocationProofRepository(context: context)
+        self.workplaceRepository = workplaceRepository ?? WorkplaceRepository(context: context)
         super.init()
         self.locationManager.delegate = self
     }

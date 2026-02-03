@@ -24,8 +24,8 @@
         <attribute name="latitude" optional="NO" attributeType="Double" usesScalarValueType="YES"/>
         <attribute name="longitude" optional="NO" attributeType="Double" usesScalarValueType="YES"/>
         <attribute name="accuracy" optional="NO" attributeType="Double" usesScalarValueType="YES"/>
-        <attribute name="altitude" optional="YES" attributeType="Double"/>
-        <attribute name="speed" optional="YES" attributeType="Double"/>
+        <attribute name="altitude" optional="YES" attributeType="Double" usesScalarValueType="NO"/>
+        <attribute name="speed" optional="YES" attributeType="Double" usesScalarValueType="NO"/>
         <attribute name="reason" optional="NO" attributeType="String"/>
     </entity>
 </model>

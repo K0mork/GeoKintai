@@ -19,4 +19,10 @@ This project strictly follows Test-Driven Development (TDD).
 
 -   **Test Location**: All logical components (ViewModels, UseCases, Repositories, Services) must have unit tests.
 -   **No Untested Logic**: Logic inside Views should be minimized. Move logic to ViewModels or other testable components.
--   **Commit Policy**: All tests must pass before committing changes.
+-   **Commit Policy**:
+    -   All tests must pass before committing changes.
+    -   Commit after each Red-Green-Refactor cycle when tests are green.
+    -   Keep commits small and cohesive (one logical change).
+    -   Include tests and production code in the same commit.
+    -   Separate refactors from feature changes when possible.
+    -   Commit before switching tasks or pausing work.

@@ -21,14 +21,14 @@
     - [x] LocationManager (バックグラウンド検知) 実装 (TDD)
     - [x] Repositories 実装 (TDD)
 
-- [ ] **Phase 2: UI Implementation**
-    - [ ] 詳細: [02_ui_implementation.md](docs/tasks/02_ui_implementation.md)
+- [x] **Phase 2: UI Implementation**
+    - [x] 詳細: [02_ui_implementation.md](docs/tasks/02_ui_implementation.md)
     - [x] Dashboard (Status)
-    - [ ] History (List/Detail)
-    - [ ] Settings (Workplace Management)
+    - [x] History (List/Detail)
+    - [x] Settings (Workplace Management)
 
-- [ ] **Phase 3: Integration & Verification**
-    - [ ] 詳細: [03_integration.md](docs/tasks/03_integration.md)
-    - [ ] 結合テスト (Location Service <-> Core Data)
-    - [ ] シミュレータ検証 (GPX使用)
-    - [ ] 実機検証
+- [x] **Phase 3: Integration & Verification**
+    - [x] 詳細: [03_integration.md](docs/tasks/03_integration.md)
+    - [x] 結合テスト (Location Service <-> Core Data)
+    - [x] シミュレータ検証 (GPX使用)
+    - [x] 実機検証

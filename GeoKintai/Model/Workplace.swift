@@ -1,7 +1,7 @@
 import CoreData
 
 @objc(Workplace)
-public class Workplace: NSManagedObject {}
+public class Workplace: NSManagedObject, Identifiable {}
 
 extension Workplace {
     @nonobjc public class func fetchRequest() -> NSFetchRequest<Workplace> {

@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<gpx version="1.1" creator="Xcode">
+    <!-- Commute Out simulation: Leave workplace after being checked in -->
+
+    <!-- 1. Start at workplace center (already checked in) -->
+    <wpt lat="35.6812" lon="139.7671">
+        <name>Workplace Center</name>
+        <time>2024-01-01T18:00:00Z</time>
+    </wpt>
+
+    <!-- 2. Still at workplace -->
+    <wpt lat="35.6812" lon="139.7672">
+        <time>2024-01-01T18:01:00Z</time>
+    </wpt>
+
+    <!-- 3. Start leaving -->
+    <wpt lat="35.6815" lon="139.7671">
+        <time>2024-01-01T18:02:00Z</time>
+    </wpt>
+
+    <!-- 4. Exit region boundary -->
+    <wpt lat="35.6822" lon="139.7671">
+        <name>Exit Region</name>
+        <time>2024-01-01T18:03:00Z</time>
+    </wpt>
+
+    <!-- 5. Continue moving away (verification period: 2+ minutes) -->
+    <wpt lat="35.6835" lon="139.7671">
+        <time>2024-01-01T18:04:00Z</time>
+    </wpt>
+
+    <wpt lat="35.6850" lon="139.7671">
+        <time>2024-01-01T18:05:00Z</time>
+    </wpt>
+
+    <wpt lat="35.6870" lon="139.7671">
+        <time>2024-01-01T18:06:00Z</time>
+    </wpt>
+
+    <!-- 6. Far from workplace (exit confirmed) -->
+    <wpt lat="35.6900" lon="139.7671">
+        <name>Exit Confirmed</name>
+        <time>2024-01-01T18:08:00Z</time>
+    </wpt>
+</gpx>

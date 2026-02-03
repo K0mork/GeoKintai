@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<gpx version="1.1" creator="Xcode">
+    <!-- Multiple Visits simulation: Leave and return to workplace in same day -->
+    <!-- Expected: Two separate attendance records should be created -->
+
+    <!-- Morning: First visit -->
+    <wpt lat="35.6900" lon="139.7671">
+        <name>Morning Start</name>
+        <time>2024-01-01T09:00:00Z</time>
+    </wpt>
+
+    <wpt lat="35.6812" lon="139.7671">
+        <name>Enter Workplace (1st)</name>
+        <time>2024-01-01T09:05:00Z</time>
+    </wpt>
+
+    <!-- Stay for verification (5+ minutes) -->
+    <wpt lat="35.6812" lon="139.7671">
+        <time>2024-01-01T09:10:00Z</time>
+    </wpt>
+
+    <wpt lat="35.6812" lon="139.7671">
+        <time>2024-01-01T09:15:00Z</time>
+    </wpt>
+
+    <!-- Leave for lunch -->
+    <wpt lat="35.6850" lon="139.7671">
+        <name>Leave for Lunch</name>
+        <time>2024-01-01T12:00:00Z</time>
+    </wpt>
+
+    <wpt lat="35.6900" lon="139.7671">
+        <time>2024-01-01T12:05:00Z</time>
+    </wpt>
+
+    <!-- Stay away for exit verification -->
+    <wpt lat="35.6950" lon="139.7671">
+        <name>At Lunch</name>
+        <time>2024-01-01T12:10:00Z</time>
+    </wpt>
+
+    <wpt lat="35.6950" lon="139.7671">
+        <time>2024-01-01T12:30:00Z</time>
+    </wpt>
+
+    <!-- Return to workplace -->
+    <wpt lat="35.6900" lon="139.7671">
+        <name>Return from Lunch</name>
+        <time>2024-01-01T13:00:00Z</time>
+    </wpt>
+
+    <wpt lat="35.6812" lon="139.7671">
+        <name>Enter Workplace (2nd)</name>
+        <time>2024-01-01T13:05:00Z</time>
+    </wpt>
+
+    <!-- Stay for verification -->
+    <wpt lat="35.6812" lon="139.7671">
+        <time>2024-01-01T13:10:00Z</time>
+    </wpt>
+
+    <wpt lat="35.6812" lon="139.7671">
+        <time>2024-01-01T13:15:00Z</time>
+    </wpt>
+
+    <!-- Continue working -->
+    <wpt lat="35.6812" lon="139.7671">
+        <name>Working Afternoon</name>
+        <time>2024-01-01T17:00:00Z</time>
+    </wpt>
+</gpx>

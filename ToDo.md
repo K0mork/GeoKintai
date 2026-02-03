@@ -23,12 +23,20 @@
 
 - [x] **Phase 2: UI Implementation**
     - [x] 詳細: [02_ui_implementation.md](docs/tasks/02_ui_implementation.md)
-    - [x] Dashboard (Status)
-    - [x] History (List/Detail)
-    - [x] Settings (Workplace Management)
+    - [x] Dashboard (Status) - TabView構造 + StatusTab
+    - [x] History (List/Detail) - HistoryTab + HistoryDetailView
+    - [x] Settings (Workplace Management) - SettingsTab + WorkplaceListView + WorkplaceEditView
 
 - [x] **Phase 3: Integration & Verification**
     - [x] 詳細: [03_integration.md](docs/tasks/03_integration.md)
     - [x] 結合テスト (Location Service <-> Core Data)
-    - [x] シミュレータ検証 (GPX使用)
+    - [x] シミュレータ検証 (GPX使用) - SimulatedLocations/ に4つのGPXファイル作成
     - [x] 実機検証
+
+## 2. Additional Features (実装済み)
+- [x] LocationProofRepository (証拠ログ保存)
+- [x] AppCoordinator (アプリ起動時の統合ロジック)
+- [x] 位置情報権限リクエストUI (LocationPermissionView)
+- [x] 滞在確認ロジック (5分タイマー)
+- [x] Exit確認ロジック (2分タイマー)
+- [x] Region Sync機能

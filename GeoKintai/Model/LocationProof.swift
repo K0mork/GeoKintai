@@ -1,7 +1,7 @@
 import CoreData
 
 @objc(LocationProof)
-public class LocationProof: NSManagedObject {}
+public class LocationProof: NSManagedObject, Identifiable {}
 
 extension LocationProof {
     @nonobjc public class func fetchRequest() -> NSFetchRequest<LocationProof> {

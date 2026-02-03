@@ -1,7 +1,7 @@
 import CoreData
 
 @objc(AttendanceRecord)
-public class AttendanceRecord: NSManagedObject {}
+public class AttendanceRecord: NSManagedObject, Identifiable {}
 
 extension AttendanceRecord {
     @nonobjc public class func fetchRequest() -> NSFetchRequest<AttendanceRecord> {

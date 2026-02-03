@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<gpx version="1.1" creator="Xcode">
+    <!-- GPS Drift simulation: User is at workplace, but GPS readings fluctuate -->
+    <!-- Expected: Should stay checked-in, exit should NOT be triggered -->
+
+    <!-- 1. At workplace center (checked in) -->
+    <wpt lat="35.6812" lon="139.7671">
+        <name>Workplace Center</name>
+        <time>2024-01-01T10:00:00Z</time>
+    </wpt>
+
+    <!-- 2. GPS drifts slightly outside region -->
+    <wpt lat="35.6825" lon="139.7671">
+        <name>GPS Drift Outside</name>
+        <time>2024-01-01T10:01:00Z</time>
+    </wpt>
+
+    <!-- 3. Back inside -->
+    <wpt lat="35.6812" lon="139.7671">
+        <time>2024-01-01T10:02:00Z</time>
+    </wpt>
+
+    <!-- 4. Drift again -->
+    <wpt lat="35.6800" lon="139.7680">
+        <time>2024-01-01T10:03:00Z</time>
+    </wpt>
+
+    <!-- 5. Back inside -->
+    <wpt lat="35.6812" lon="139.7671">
+        <time>2024-01-01T10:04:00Z</time>
+    </wpt>
+
+    <!-- 6. Another drift -->
+    <wpt lat="35.6823" lon="139.7660">
+        <time>2024-01-01T10:05:00Z</time>
+    </wpt>
+
+    <!-- 7. Back to center - should remain checked in -->
+    <wpt lat="35.6812" lon="139.7671">
+        <name>Stabilized at Center</name>
+        <time>2024-01-01T10:06:00Z</time>
+    </wpt>
+
+    <!-- 8. Stay at workplace -->
+    <wpt lat="35.6812" lon="139.7671">
+        <time>2024-01-01T10:10:00Z</time>
+    </wpt>
+</gpx>

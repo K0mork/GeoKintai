@@ -23,7 +23,7 @@
 
 - [ ] **Phase 2: UI Implementation**
     - [ ] 詳細: [02_ui_implementation.md](docs/tasks/02_ui_implementation.md)
-    - [ ] Dashboard (Status)
+    - [x] Dashboard (Status)
     - [ ] History (List/Detail)
     - [ ] Settings (Workplace Management)
 

@@ -1,7 +1,41 @@
 import CoreData
 
 @MainActor
-public final class AttendanceRepository {
+public protocol AttendanceRepositoryProtocol {
+    @discardableResult
+    func checkIn(
+        workplaceId: UUID,
+        entryTime: Date,
+        isManual: Bool,
+        note: String?
+    ) throws -> AttendanceRecord
+    func checkOut(_ record: AttendanceRecord, exitTime: Date) throws
+    func fetchRecords(for workplaceId: UUID) throws -> [AttendanceRecord]
+}
+
+public extension AttendanceRepositoryProtocol {
+    @discardableResult
+    func checkIn(
+        workplaceId: UUID,
+        entryTime: Date = Date(),
+        isManual: Bool = false,
+        note: String? = nil
+    ) throws -> AttendanceRecord {
+        try checkIn(
+            workplaceId: workplaceId,
+            entryTime: entryTime,
+            isManual: isManual,
+            note: note
+        )
+    }
+
+    func checkOut(_ record: AttendanceRecord, exitTime: Date = Date()) throws {
+        try checkOut(record, exitTime: exitTime)
+    }
+}
+
+@MainActor
+public final class AttendanceRepository: AttendanceRepositoryProtocol {
     private let context: NSManagedObjectContext
 
     public init(context: NSManagedObjectContext) {

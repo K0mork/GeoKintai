@@ -7,7 +7,7 @@ final class MockLocationManager: CLLocationManagerProtocol {
     var delegate: CLLocationManagerDelegate?
     var didStartMonitoring = false
     var didStartUpdatingLocation = false
-    func startMonitoring(for region: CLCircularRegion) {
+    func startMonitoring(for region: CLRegion) {
         didStartMonitoring = true
     }
     func startUpdatingLocation() {
@@ -19,9 +19,9 @@ final class MockLocationManager: CLLocationManagerProtocol {
 final class MockApplication: ApplicationProtocol {
     var didBeginBackgroundTask = false
     var didEndBackgroundTask = false
-    func beginBackgroundTask(withName taskName: String?, expirationHandler handler: (() -> Void)? = nil) -> UIBackgroundTaskIdentifier {
+    func beginBackgroundTask(withName taskName: String?, expirationHandler handler: (@MainActor @Sendable () -> Void)? = nil) -> UIBackgroundTaskIdentifier {
         didBeginBackgroundTask = true
-        return 1
+        return UIBackgroundTaskIdentifier(rawValue: 1)
     }
     func endBackgroundTask(_ identifier: UIBackgroundTaskIdentifier) {
         didEndBackgroundTask = true
@@ -37,6 +37,7 @@ final class LocationManagerWrapperTests: XCTestCase {
         XCTAssertTrue(mockManager.didStartMonitoring)
     }
 
+    @MainActor
     func testDidEnterRegionTriggersBackgroundTaskAndStartUpdating() {
         let mockManager = MockLocationManager()
         let mockApp = MockApplication()
@@ -48,6 +49,7 @@ final class LocationManagerWrapperTests: XCTestCase {
         XCTAssertTrue(mockManager.didStartUpdatingLocation)
     }
 
+    @MainActor
     func testThreadSafeLocationCollection() {
         let mockManager = MockLocationManager()
         let wrapper = LocationManagerWrapper(locationManager: mockManager, application: MockApplication())

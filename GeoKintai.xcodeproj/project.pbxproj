@@ -7,15 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		03E63D5005545B1B8C8E8E54 /* AttendanceRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAC99CF61EFB38C6AEA0E9C /* AttendanceRepository.swift */; };
+		0DE2AEDE06ED7677D03B6DAE /* StatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A85A65D032CDEBCD0482A13 /* StatusView.swift */; };
+		3FE4CF8EC0BA06F4AB962EC0 /* AttendanceRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 182A81380D928E798334EB13 /* AttendanceRepositoryTests.swift */; };
 		4B91E5A5D368416B1485BB78 /* PersistenceControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066364716A8CFFD3523AE044 /* PersistenceControllerTests.swift */; };
 		69739BC6C8AED81C1E5A7B4A /* LocationProof.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9383A92D4AEC45F4E66AEBE1 /* LocationProof.swift */; };
+		78C01108B7B2DF3524C41C1E /* WorkplaceRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01DCA61D1E7B90D602EBA98 /* WorkplaceRepository.swift */; };
 		886C1CF47181D8A452FC2859 /* AttendanceRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A45E4A92E73870EB56AA232 /* AttendanceRecord.swift */; };
 		897745A5ED9489B81AD2094A /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D3F6695CF60CCB33E47807 /* PersistenceController.swift */; };
 		929B3112E4803E29DD00CF9F /* GeoKintaiApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C767D56ED7B046926855861F /* GeoKintaiApp.swift */; };
+		A682CB5C49DE3933FB5CA71E /* LocationManagerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A28C73F4543CE5F43898A5 /* LocationManagerWrapper.swift */; };
 		B072EE4ABF914841430107AB /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = A26CFEED494DB1941674B524 /* LaunchScreen.xib */; };
+		B6F1579E50B55DEFC96A7954 /* LocationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5053B75EB2A61174C0E5DE50 /* LocationManagerTests.swift */; };
 		BA4B56C0D324CD9E4C92C921 /* GeoKintai.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0C40A11430806650B285F8E6 /* GeoKintai.xcdatamodeld */; };
 		CAC9AA27504A1A3FA27B972B /* Workplace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455D5FD22C51D129B6926232 /* Workplace.swift */; };
+		CE1D1111ADD827B77E63BBEF /* StatusViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCF683FDF2DDC8A1219D7687 /* StatusViewModelTests.swift */; };
+		D6B8F6A619B774900C358CB3 /* WorkplaceRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC59E4FDBD662D05C20E896D /* WorkplaceRepositoryTests.swift */; };
 		DD6D7A45C03B418B9D567C60 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235C50C7874EAC9C27F285DD /* ContentView.swift */; };
+		E80E71E58EC83D5BD9E55B05 /* StatusViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56716D4B39A29D004FA26F02 /* StatusViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,16 +40,25 @@
 /* Begin PBXFileReference section */
 		0338911A4A202CC1BC1DD6B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		066364716A8CFFD3523AE044 /* PersistenceControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceControllerTests.swift; sourceTree = "<group>"; };
+		16A28C73F4543CE5F43898A5 /* LocationManagerWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerWrapper.swift; sourceTree = "<group>"; };
+		182A81380D928E798334EB13 /* AttendanceRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttendanceRepositoryTests.swift; sourceTree = "<group>"; };
+		1AAC99CF61EFB38C6AEA0E9C /* AttendanceRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttendanceRepository.swift; sourceTree = "<group>"; };
 		235C50C7874EAC9C27F285DD /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		455D5FD22C51D129B6926232 /* Workplace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Workplace.swift; sourceTree = "<group>"; };
 		4B8A0996B7DAF824751C7F1A /* GeoKintaiTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = GeoKintaiTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5053B75EB2A61174C0E5DE50 /* LocationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerTests.swift; sourceTree = "<group>"; };
+		56716D4B39A29D004FA26F02 /* StatusViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusViewModel.swift; sourceTree = "<group>"; };
 		5A45E4A92E73870EB56AA232 /* AttendanceRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttendanceRecord.swift; sourceTree = "<group>"; };
 		5A5F73106C9C95BCC0D3B8FA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		7A85A65D032CDEBCD0482A13 /* StatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusView.swift; sourceTree = "<group>"; };
 		9383A92D4AEC45F4E66AEBE1 /* LocationProof.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationProof.swift; sourceTree = "<group>"; };
+		A01DCA61D1E7B90D602EBA98 /* WorkplaceRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkplaceRepository.swift; sourceTree = "<group>"; };
 		A26CFEED494DB1941674B524 /* LaunchScreen.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
 		AC70EB0A4DFCEF37876E6868 /* GeoKintai.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GeoKintai.xcdatamodel; sourceTree = "<group>"; };
+		BCF683FDF2DDC8A1219D7687 /* StatusViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusViewModelTests.swift; sourceTree = "<group>"; };
 		C5D3F6695CF60CCB33E47807 /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
 		C767D56ED7B046926855861F /* GeoKintaiApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoKintaiApp.swift; sourceTree = "<group>"; };
+		FC59E4FDBD662D05C20E896D /* WorkplaceRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkplaceRepositoryTests.swift; sourceTree = "<group>"; };
 		FE5D3670745250DD839CCBB3 /* GeoKintai.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = GeoKintai.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -57,7 +75,11 @@
 		250F83C2DC8F0D266D4304D1 /* GeoKintaiTests */ = {
 			isa = PBXGroup;
 			children = (
+				182A81380D928E798334EB13 /* AttendanceRepositoryTests.swift */,
+				5053B75EB2A61174C0E5DE50 /* LocationManagerTests.swift */,
 				066364716A8CFFD3523AE044 /* PersistenceControllerTests.swift */,
+				BCF683FDF2DDC8A1219D7687 /* StatusViewModelTests.swift */,
+				FC59E4FDBD662D05C20E896D /* WorkplaceRepositoryTests.swift */,
 				2E440CC58F920FAFE95159F9 /* Resources */,
 			);
 			path = GeoKintaiTests;
@@ -71,6 +93,15 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		4AAE14C4DBD4D15E83116E73 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				6868C8D5510FA9BE4078FD82 /* Repositories */,
+				645F4C44AEEE460A2DA6ADD2 /* Services */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
 		50B2F04C950912FDD4835FFB /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -78,6 +109,14 @@
 				A26CFEED494DB1941674B524 /* LaunchScreen.xib */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		645F4C44AEEE460A2DA6ADD2 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				16A28C73F4543CE5F43898A5 /* LocationManagerWrapper.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 		6809999B38B5C3199BD4050C /* Model */ = {
@@ -91,11 +130,21 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		6868C8D5510FA9BE4078FD82 /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				1AAC99CF61EFB38C6AEA0E9C /* AttendanceRepository.swift */,
+				A01DCA61D1E7B90D602EBA98 /* WorkplaceRepository.swift */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
 		98540EBB173EA5C1AF647DF3 /* GeoKintai */ = {
 			isa = PBXGroup;
 			children = (
 				C767D56ED7B046926855861F /* GeoKintaiApp.swift */,
 				C5D3F6695CF60CCB33E47807 /* PersistenceController.swift */,
+				4AAE14C4DBD4D15E83116E73 /* Core */,
 				A586BCCAC3E7B2C8E32EF055 /* Features */,
 				6809999B38B5C3199BD4050C /* Model */,
 				50B2F04C950912FDD4835FFB /* Resources */,
@@ -107,8 +156,18 @@
 			isa = PBXGroup;
 			children = (
 				235C50C7874EAC9C27F285DD /* ContentView.swift */,
+				B638CBC5D84F80AAE79D5BA4 /* Status */,
 			);
 			path = Features;
+			sourceTree = "<group>";
+		};
+		B638CBC5D84F80AAE79D5BA4 /* Status */ = {
+			isa = PBXGroup;
+			children = (
+				7A85A65D032CDEBCD0482A13 /* StatusView.swift */,
+				56716D4B39A29D004FA26F02 /* StatusViewModel.swift */,
+			);
+			path = Status;
 			sourceTree = "<group>";
 		};
 		F023BCFBE7453C67E4BC93E7 = {
@@ -214,7 +273,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3FE4CF8EC0BA06F4AB962EC0 /* AttendanceRepositoryTests.swift in Sources */,
+				B6F1579E50B55DEFC96A7954 /* LocationManagerTests.swift in Sources */,
 				4B91E5A5D368416B1485BB78 /* PersistenceControllerTests.swift in Sources */,
+				CE1D1111ADD827B77E63BBEF /* StatusViewModelTests.swift in Sources */,
+				D6B8F6A619B774900C358CB3 /* WorkplaceRepositoryTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -223,12 +286,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				886C1CF47181D8A452FC2859 /* AttendanceRecord.swift in Sources */,
+				03E63D5005545B1B8C8E8E54 /* AttendanceRepository.swift in Sources */,
 				DD6D7A45C03B418B9D567C60 /* ContentView.swift in Sources */,
 				BA4B56C0D324CD9E4C92C921 /* GeoKintai.xcdatamodeld in Sources */,
 				929B3112E4803E29DD00CF9F /* GeoKintaiApp.swift in Sources */,
+				A682CB5C49DE3933FB5CA71E /* LocationManagerWrapper.swift in Sources */,
 				69739BC6C8AED81C1E5A7B4A /* LocationProof.swift in Sources */,
 				897745A5ED9489B81AD2094A /* PersistenceController.swift in Sources */,
+				0DE2AEDE06ED7677D03B6DAE /* StatusView.swift in Sources */,
+				E80E71E58EC83D5BD9E55B05 /* StatusViewModel.swift in Sources */,
 				CAC9AA27504A1A3FA27B972B /* Workplace.swift in Sources */,
+				78C01108B7B2DF3524C41C1E /* WorkplaceRepository.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

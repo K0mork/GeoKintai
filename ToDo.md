@@ -14,12 +14,12 @@
 ## 1. Implementation Phase
 詳細なタスクは `docs/tasks/` 以下のファイルで管理する。
 
-- [ ] **Phase 1: Project Setup & Core Logic**
-    - [ ] 詳細: [01_core_logic.md](docs/tasks/01_core_logic.md)
-    - [ ] プロジェクト雛形作成 (Include Test Target)
-    - [ ] Core Data Stack 実装 (TDD)
-    - [ ] LocationManager (バックグラウンド検知) 実装 (TDD)
-    - [ ] Repositories 実装 (TDD)
+- [x] **Phase 1: Project Setup & Core Logic**
+    - [x] 詳細: [01_core_logic.md](docs/tasks/01_core_logic.md)
+    - [x] プロジェクト雛形作成 (Include Test Target)
+    - [x] Core Data Stack 実装 (TDD)
+    - [x] LocationManager (バックグラウンド検知) 実装 (TDD)
+    - [x] Repositories 実装 (TDD)
 
 - [ ] **Phase 2: UI Implementation**
     - [ ] 詳細: [02_ui_implementation.md](docs/tasks/02_ui_implementation.md)

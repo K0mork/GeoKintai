@@ -70,6 +70,8 @@ targets:
     platform: iOS
     sources:
       - path: GeoKintaiTests
+      - path: SimulatedLocations
+        buildPhase: resources
     dependencies:
       - target: GeoKintai
     settings:

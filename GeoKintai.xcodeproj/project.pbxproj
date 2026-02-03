@@ -11,12 +11,17 @@
 		06C4E4ADC35B84442A46EDC1 /* WorkplaceListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E777923455A7B09F8AE2E29 /* WorkplaceListView.swift */; };
 		0DE2AEDE06ED7677D03B6DAE /* StatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A85A65D032CDEBCD0482A13 /* StatusView.swift */; };
 		1232887821F013334F152E2C /* LocationProofRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DF6002C2B105AB8EECE6F1 /* LocationProofRepository.swift */; };
+		21F7C927FC899095FCB9F551 /* Fast_Transit.gpx in Resources */ = {isa = PBXBuildFile; fileRef = D2BB06271CDF8D25A6B2CEF0 /* Fast_Transit.gpx */; };
+		27B23C1D6249FB8245E67D29 /* GPS_Drift.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 9BB21CBEC7C43B7D1E4ED233 /* GPS_Drift.gpx */; };
 		3FE4CF8EC0BA06F4AB962EC0 /* AttendanceRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 182A81380D928E798334EB13 /* AttendanceRepositoryTests.swift */; };
+		4AB0FE21B36A19DFEE131085 /* Boundary_Edge.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 4653FF362B6290400CAF2365 /* Boundary_Edge.gpx */; };
 		4B91E5A5D368416B1485BB78 /* PersistenceControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066364716A8CFFD3523AE044 /* PersistenceControllerTests.swift */; };
 		54E657865E48CD29CBD79A36 /* LocationProofRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB36A50164BA9D97C58B60A /* LocationProofRepositoryTests.swift */; };
+		5B15681E95FCAE1044311C9F /* Short_Stay.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 7B1AB13D97B597910538D565 /* Short_Stay.gpx */; };
 		66D2DE042C97C726A3AE84F1 /* HistoryTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 221DEB50D10D27EB4B044305 /* HistoryTab.swift */; };
 		69739BC6C8AED81C1E5A7B4A /* LocationProof.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9383A92D4AEC45F4E66AEBE1 /* LocationProof.swift */; };
 		6B46BA97F8D5B9E3D12FE09D /* LocationPermissionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B93318409DAC1C851DF48B /* LocationPermissionView.swift */; };
+		6E1923112616228C6DA6E0A9 /* GPXScenarioTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDA2A69C666928D900A1AA09 /* GPXScenarioTests.swift */; };
 		78C01108B7B2DF3524C41C1E /* WorkplaceRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01DCA61D1E7B90D602EBA98 /* WorkplaceRepository.swift */; };
 		84D7410F8D470C577B873845 /* WorkplaceEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3707A699B25CE571FD09C7C /* WorkplaceEditView.swift */; };
 		85F84B81307074FB04FBEFB1 /* AppCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0997FBB1B0B3A2CBDF05D568 /* AppCoordinatorTests.swift */; };
@@ -25,19 +30,27 @@
 		897745A5ED9489B81AD2094A /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D3F6695CF60CCB33E47807 /* PersistenceController.swift */; };
 		906C822A0CA6002AF3C31E90 /* HistoryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E529AAE823F3B786E4AE705 /* HistoryDetailView.swift */; };
 		929B3112E4803E29DD00CF9F /* GeoKintaiApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C767D56ED7B046926855861F /* GeoKintaiApp.swift */; };
+		929EE1A3455EF91032426E86 /* SimulationTestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0617F3E0BD61719D51FE6297 /* SimulationTestHelper.swift */; };
 		9E3C715C81ADC0293153354B /* SettingsTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E6AEEE24F75A621776CA8E /* SettingsTab.swift */; };
 		A5A6F0ADFA92C39BD1EBD41B /* HistoryViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15243BF47A517144E34EF7F /* HistoryViewModelTests.swift */; };
 		A682CB5C49DE3933FB5CA71E /* LocationManagerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A28C73F4543CE5F43898A5 /* LocationManagerWrapper.swift */; };
+		ADB8DE7DC5E936ECCF40A83E /* Commute_In.gpx in Resources */ = {isa = PBXBuildFile; fileRef = A7E869CD5476E546AEF23DB5 /* Commute_In.gpx */; };
 		B072EE4ABF914841430107AB /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = A26CFEED494DB1941674B524 /* LaunchScreen.xib */; };
+		B54D93354B32C7C93BA954F0 /* Multiple_Visits.gpx in Resources */ = {isa = PBXBuildFile; fileRef = F32BFA7DA1550DD04752E9E6 /* Multiple_Visits.gpx */; };
 		B6F1579E50B55DEFC96A7954 /* LocationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5053B75EB2A61174C0E5DE50 /* LocationManagerTests.swift */; };
 		BA4B56C0D324CD9E4C92C921 /* GeoKintai.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0C40A11430806650B285F8E6 /* GeoKintai.xcdatamodeld */; };
 		CAC9AA27504A1A3FA27B972B /* Workplace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455D5FD22C51D129B6926232 /* Workplace.swift */; };
 		CE1D1111ADD827B77E63BBEF /* StatusViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCF683FDF2DDC8A1219D7687 /* StatusViewModelTests.swift */; };
 		D6B8F6A619B774900C358CB3 /* WorkplaceRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC59E4FDBD662D05C20E896D /* WorkplaceRepositoryTests.swift */; };
 		D7DF7C7DCF0529B804380905 /* StatusTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33BB37D0D280CE8C5305E399 /* StatusTab.swift */; };
+		DA02F0B72D427880D110248B /* Workplace.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 8ED0C20320CA0057F9C3AC85 /* Workplace.gpx */; };
 		DD6D7A45C03B418B9D567C60 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235C50C7874EAC9C27F285DD /* ContentView.swift */; };
 		E77826F7B55572DE622A05B8 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43CCF05CF0889A7D40C5794E /* AppCoordinator.swift */; };
 		E80E71E58EC83D5BD9E55B05 /* StatusViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56716D4B39A29D004FA26F02 /* StatusViewModel.swift */; };
+		EAA14EBD9C60B03646E2ED0C /* Commute_Out.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 9E18304E851112E67AECF033 /* Commute_Out.gpx */; };
+		EDBFB47A4629FE139DD19B50 /* Pass_By.gpx in Resources */ = {isa = PBXBuildFile; fileRef = A4B7401FF3E6F4255762EAA8 /* Pass_By.gpx */; };
+		F0AAF4DB8307E89F280E4A0D /* GPXParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B11D2EE7E59F5C7D68CC393 /* GPXParser.swift */; };
+		FA78F63342972E9EFAC681D7 /* Late_Night.gpx in Resources */ = {isa = PBXBuildFile; fileRef = B39DB326F2DC323B8E605027 /* Late_Night.gpx */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,8 +65,10 @@
 
 /* Begin PBXFileReference section */
 		0338911A4A202CC1BC1DD6B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		0617F3E0BD61719D51FE6297 /* SimulationTestHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulationTestHelper.swift; sourceTree = "<group>"; };
 		066364716A8CFFD3523AE044 /* PersistenceControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceControllerTests.swift; sourceTree = "<group>"; };
 		0997FBB1B0B3A2CBDF05D568 /* AppCoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinatorTests.swift; sourceTree = "<group>"; };
+		0B11D2EE7E59F5C7D68CC393 /* GPXParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPXParser.swift; sourceTree = "<group>"; };
 		0E777923455A7B09F8AE2E29 /* WorkplaceListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkplaceListView.swift; sourceTree = "<group>"; };
 		16A28C73F4543CE5F43898A5 /* LocationManagerWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerWrapper.swift; sourceTree = "<group>"; };
 		182A81380D928E798334EB13 /* AttendanceRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttendanceRepositoryTests.swift; sourceTree = "<group>"; };
@@ -66,6 +81,7 @@
 		42B93318409DAC1C851DF48B /* LocationPermissionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPermissionView.swift; sourceTree = "<group>"; };
 		43CCF05CF0889A7D40C5794E /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		455D5FD22C51D129B6926232 /* Workplace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Workplace.swift; sourceTree = "<group>"; };
+		4653FF362B6290400CAF2365 /* Boundary_Edge.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Boundary_Edge.gpx; sourceTree = "<group>"; };
 		4B8A0996B7DAF824751C7F1A /* GeoKintaiTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = GeoKintaiTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5053B75EB2A61174C0E5DE50 /* LocationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerTests.swift; sourceTree = "<group>"; };
 		56716D4B39A29D004FA26F02 /* StatusViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusViewModel.swift; sourceTree = "<group>"; };
@@ -73,15 +89,25 @@
 		5A5F73106C9C95BCC0D3B8FA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		6872BCC61C245AE4B242F08B /* HistoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryViewModel.swift; sourceTree = "<group>"; };
 		7A85A65D032CDEBCD0482A13 /* StatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusView.swift; sourceTree = "<group>"; };
+		7B1AB13D97B597910538D565 /* Short_Stay.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Short_Stay.gpx; sourceTree = "<group>"; };
 		81DF6002C2B105AB8EECE6F1 /* LocationProofRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationProofRepository.swift; sourceTree = "<group>"; };
+		8ED0C20320CA0057F9C3AC85 /* Workplace.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Workplace.gpx; sourceTree = "<group>"; };
 		9383A92D4AEC45F4E66AEBE1 /* LocationProof.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationProof.swift; sourceTree = "<group>"; };
+		9BB21CBEC7C43B7D1E4ED233 /* GPS_Drift.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = GPS_Drift.gpx; sourceTree = "<group>"; };
+		9E18304E851112E67AECF033 /* Commute_Out.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Commute_Out.gpx; sourceTree = "<group>"; };
 		A01DCA61D1E7B90D602EBA98 /* WorkplaceRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkplaceRepository.swift; sourceTree = "<group>"; };
 		A15243BF47A517144E34EF7F /* HistoryViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryViewModelTests.swift; sourceTree = "<group>"; };
 		A26CFEED494DB1941674B524 /* LaunchScreen.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
+		A4B7401FF3E6F4255762EAA8 /* Pass_By.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Pass_By.gpx; sourceTree = "<group>"; };
+		A7E869CD5476E546AEF23DB5 /* Commute_In.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Commute_In.gpx; sourceTree = "<group>"; };
 		AC70EB0A4DFCEF37876E6868 /* GeoKintai.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GeoKintai.xcdatamodel; sourceTree = "<group>"; };
+		B39DB326F2DC323B8E605027 /* Late_Night.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Late_Night.gpx; sourceTree = "<group>"; };
 		BCF683FDF2DDC8A1219D7687 /* StatusViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusViewModelTests.swift; sourceTree = "<group>"; };
+		BDA2A69C666928D900A1AA09 /* GPXScenarioTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPXScenarioTests.swift; sourceTree = "<group>"; };
 		C5D3F6695CF60CCB33E47807 /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
 		C767D56ED7B046926855861F /* GeoKintaiApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoKintaiApp.swift; sourceTree = "<group>"; };
+		D2BB06271CDF8D25A6B2CEF0 /* Fast_Transit.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Fast_Transit.gpx; sourceTree = "<group>"; };
+		F32BFA7DA1550DD04752E9E6 /* Multiple_Visits.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Multiple_Visits.gpx; sourceTree = "<group>"; };
 		F3707A699B25CE571FD09C7C /* WorkplaceEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkplaceEditView.swift; sourceTree = "<group>"; };
 		FC59E4FDBD662D05C20E896D /* WorkplaceRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkplaceRepositoryTests.swift; sourceTree = "<group>"; };
 		FDB36A50164BA9D97C58B60A /* LocationProofRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationProofRepositoryTests.swift; sourceTree = "<group>"; };
@@ -98,17 +124,28 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		1A8334701DD6183775447A60 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				0B11D2EE7E59F5C7D68CC393 /* GPXParser.swift */,
+				0617F3E0BD61719D51FE6297 /* SimulationTestHelper.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		250F83C2DC8F0D266D4304D1 /* GeoKintaiTests */ = {
 			isa = PBXGroup;
 			children = (
 				0997FBB1B0B3A2CBDF05D568 /* AppCoordinatorTests.swift */,
 				182A81380D928E798334EB13 /* AttendanceRepositoryTests.swift */,
+				BDA2A69C666928D900A1AA09 /* GPXScenarioTests.swift */,
 				A15243BF47A517144E34EF7F /* HistoryViewModelTests.swift */,
 				5053B75EB2A61174C0E5DE50 /* LocationManagerTests.swift */,
 				FDB36A50164BA9D97C58B60A /* LocationProofRepositoryTests.swift */,
 				066364716A8CFFD3523AE044 /* PersistenceControllerTests.swift */,
 				BCF683FDF2DDC8A1219D7687 /* StatusViewModelTests.swift */,
 				FC59E4FDBD662D05C20E896D /* WorkplaceRepositoryTests.swift */,
+				1A8334701DD6183775447A60 /* Helpers */,
 				2E440CC58F920FAFE95159F9 /* Resources */,
 			);
 			path = GeoKintaiTests;
@@ -225,11 +262,29 @@
 			path = Settings;
 			sourceTree = "<group>";
 		};
+		D9F5B5FC159DFDCF24719C4D /* SimulatedLocations */ = {
+			isa = PBXGroup;
+			children = (
+				4653FF362B6290400CAF2365 /* Boundary_Edge.gpx */,
+				A7E869CD5476E546AEF23DB5 /* Commute_In.gpx */,
+				9E18304E851112E67AECF033 /* Commute_Out.gpx */,
+				D2BB06271CDF8D25A6B2CEF0 /* Fast_Transit.gpx */,
+				9BB21CBEC7C43B7D1E4ED233 /* GPS_Drift.gpx */,
+				B39DB326F2DC323B8E605027 /* Late_Night.gpx */,
+				F32BFA7DA1550DD04752E9E6 /* Multiple_Visits.gpx */,
+				A4B7401FF3E6F4255762EAA8 /* Pass_By.gpx */,
+				7B1AB13D97B597910538D565 /* Short_Stay.gpx */,
+				8ED0C20320CA0057F9C3AC85 /* Workplace.gpx */,
+			);
+			path = SimulatedLocations;
+			sourceTree = "<group>";
+		};
 		F023BCFBE7453C67E4BC93E7 = {
 			isa = PBXGroup;
 			children = (
 				98540EBB173EA5C1AF647DF3 /* GeoKintai */,
 				250F83C2DC8F0D266D4304D1 /* GeoKintaiTests */,
+				D9F5B5FC159DFDCF24719C4D /* SimulatedLocations */,
 				183DCA47DD8E8D221917CE99 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -260,6 +315,7 @@
 			buildConfigurationList = 5F562D8BDFA917D7E19CCF8A /* Build configuration list for PBXNativeTarget "GeoKintaiTests" */;
 			buildPhases = (
 				170A9B4EE163D04672EF8F1E /* Sources */,
+				2B68BAE2B6B54DC5D5C03BC7 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -313,6 +369,23 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		2B68BAE2B6B54DC5D5C03BC7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4AB0FE21B36A19DFEE131085 /* Boundary_Edge.gpx in Resources */,
+				ADB8DE7DC5E936ECCF40A83E /* Commute_In.gpx in Resources */,
+				EAA14EBD9C60B03646E2ED0C /* Commute_Out.gpx in Resources */,
+				21F7C927FC899095FCB9F551 /* Fast_Transit.gpx in Resources */,
+				27B23C1D6249FB8245E67D29 /* GPS_Drift.gpx in Resources */,
+				FA78F63342972E9EFAC681D7 /* Late_Night.gpx in Resources */,
+				B54D93354B32C7C93BA954F0 /* Multiple_Visits.gpx in Resources */,
+				EDBFB47A4629FE139DD19B50 /* Pass_By.gpx in Resources */,
+				5B15681E95FCAE1044311C9F /* Short_Stay.gpx in Resources */,
+				DA02F0B72D427880D110248B /* Workplace.gpx in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C482FBF39E49A586EDDED830 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -330,10 +403,13 @@
 			files = (
 				85F84B81307074FB04FBEFB1 /* AppCoordinatorTests.swift in Sources */,
 				3FE4CF8EC0BA06F4AB962EC0 /* AttendanceRepositoryTests.swift in Sources */,
+				F0AAF4DB8307E89F280E4A0D /* GPXParser.swift in Sources */,
+				6E1923112616228C6DA6E0A9 /* GPXScenarioTests.swift in Sources */,
 				A5A6F0ADFA92C39BD1EBD41B /* HistoryViewModelTests.swift in Sources */,
 				B6F1579E50B55DEFC96A7954 /* LocationManagerTests.swift in Sources */,
 				54E657865E48CD29CBD79A36 /* LocationProofRepositoryTests.swift in Sources */,
 				4B91E5A5D368416B1485BB78 /* PersistenceControllerTests.swift in Sources */,
+				929EE1A3455EF91032426E86 /* SimulationTestHelper.swift in Sources */,
 				CE1D1111ADD827B77E63BBEF /* StatusViewModelTests.swift in Sources */,
 				D6B8F6A619B774900C358CB3 /* WorkplaceRepositoryTests.swift in Sources */,
 			);

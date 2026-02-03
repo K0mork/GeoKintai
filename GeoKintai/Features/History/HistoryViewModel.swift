@@ -1,11 +1,13 @@
 import Foundation
 import CoreData
 
+@MainActor
 protocol HistoryRecordStore {
     func fetchRecords() throws -> [AttendanceRecord]
     func delete(_ record: AttendanceRecord) throws
 }
 
+@MainActor
 final class CoreDataHistoryRecordStore: HistoryRecordStore {
     private let context: NSManagedObjectContext
 

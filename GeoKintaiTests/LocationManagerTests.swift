@@ -143,6 +143,47 @@ final class LocationManagerWrapperTests: XCTestCase {
         XCTAssertTrue(mockManager.monitoredRegions.isEmpty)
     }
 
+    func testSyncMonitoredRegionsCapsRadiusAfterTwentyRegions() {
+        let mockManager = MockLocationManager()
+        let wrapper = LocationManagerWrapper(locationManager: mockManager, application: MockApplication())
+
+        let workplaces = (0..<21).map { _ in
+            (id: UUID(), latitude: 35.0, longitude: 139.0, radius: 1000.0)
+        }
+
+        wrapper.syncMonitoredRegions(with: workplaces)
+
+        let firstId = workplaces.first!.id.uuidString
+        let lastId = workplaces.last!.id.uuidString
+
+        let firstRegion = mockManager.monitoredRegions.first(where: { $0.identifier == firstId }) as? CLCircularRegion
+        let lastRegion = mockManager.monitoredRegions.first(where: { $0.identifier == lastId }) as? CLCircularRegion
+
+        XCTAssertNotNil(firstRegion)
+        XCTAssertNotNil(lastRegion)
+        XCTAssertEqual(firstRegion!.radius, 1000.0, accuracy: 0.001)
+        XCTAssertEqual(lastRegion!.radius, 100.0, accuracy: 0.001)
+    }
+
+    func testSyncMonitoredRegionsEnablesEntryAndExitNotifications() {
+        let mockManager = MockLocationManager()
+        let wrapper = LocationManagerWrapper(locationManager: mockManager, application: MockApplication())
+
+        let workplaces = [
+            (id: UUID(), latitude: 35.0, longitude: 139.0, radius: 100.0),
+            (id: UUID(), latitude: 36.0, longitude: 140.0, radius: 120.0)
+        ]
+
+        wrapper.syncMonitoredRegions(with: workplaces)
+
+        for region in mockManager.monitoredRegions {
+            let circular = region as? CLCircularRegion
+            XCTAssertNotNil(circular)
+            XCTAssertTrue(circular?.notifyOnEntry ?? false)
+            XCTAssertTrue(circular?.notifyOnExit ?? false)
+        }
+    }
+
     // MARK: - Entry Region Tests
 
     @MainActor

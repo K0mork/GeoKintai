@@ -3,6 +3,28 @@ import XCTest
 
 @MainActor
 final class StatusViewModelTests: XCTestCase {
+    @MainActor
+    private final class FailingAttendanceRepository: AttendanceRepositoryProtocol {
+        let error = NSError(domain: "StatusViewModelTests", code: 1, userInfo: [NSLocalizedDescriptionKey: "fetch failed"])
+
+        func checkIn(
+            workplaceId: UUID,
+            entryTime: Date,
+            isManual: Bool,
+            note: String?
+        ) throws -> AttendanceRecord {
+            throw error
+        }
+
+        func checkOut(_ record: AttendanceRecord, exitTime: Date) throws {
+            throw error
+        }
+
+        func fetchRecords(for workplaceId: UUID) throws -> [AttendanceRecord] {
+            throw error
+        }
+    }
+
     var controller: PersistenceController!
     var repository: AttendanceRepository!
     var workplaceId: UUID!
@@ -132,6 +154,13 @@ final class StatusViewModelTests: XCTestCase {
         // After update, should reflect new status
         viewModel.updateStatus()
         XCTAssertEqual(viewModel.status, .onDuty)
+    }
+
+    func testUpdateStatusSetsErrorOnFailure() async throws {
+        let failingRepository = FailingAttendanceRepository()
+        let vm = StatusViewModel(repository: failingRepository, workplaceId: UUID())
+        XCTAssertEqual(vm.status, .offDuty)
+        XCTAssertEqual(vm.errorMessage, "fetch failed")
     }
 
     // MARK: - Multiple Workplaces Tests

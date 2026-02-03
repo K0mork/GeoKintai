@@ -51,6 +51,40 @@ final class LocationProofRepositoryTests: XCTestCase {
         XCTAssertEqual(proofs[0].reason, "StayCheck")
     }
 
+    func testAddBatchWithEmptyLocationsCreatesNoProofs() throws {
+        try repository.addBatch(recordId: recordId, locations: [], reason: .stayCheck)
+
+        let proofs = try repository.fetchProofs(for: recordId)
+        XCTAssertTrue(proofs.isEmpty)
+    }
+
+    func testFetchProofsReturnsSortedByTimestamp() throws {
+        let time1 = Date(timeIntervalSince1970: 100)
+        let time2 = Date(timeIntervalSince1970: 200)
+        let location1 = CLLocation(
+            coordinate: CLLocationCoordinate2D(latitude: 35.0, longitude: 139.0),
+            altitude: 0,
+            horizontalAccuracy: 5,
+            verticalAccuracy: 5,
+            timestamp: time2
+        )
+        let location2 = CLLocation(
+            coordinate: CLLocationCoordinate2D(latitude: 35.1, longitude: 139.1),
+            altitude: 0,
+            horizontalAccuracy: 5,
+            verticalAccuracy: 5,
+            timestamp: time1
+        )
+
+        try repository.add(recordId: recordId, location: location1, reason: .entryTrigger)
+        try repository.add(recordId: recordId, location: location2, reason: .entryTrigger)
+
+        let proofs = try repository.fetchProofs(for: recordId)
+        XCTAssertEqual(proofs.count, 2)
+        XCTAssertEqual(proofs[0].timestamp, time1)
+        XCTAssertEqual(proofs[1].timestamp, time2)
+    }
+
     func testFetchProofsForRecord() throws {
         let location1 = CLLocation(latitude: 35.0, longitude: 139.0)
         let location2 = CLLocation(latitude: 35.1, longitude: 139.1)

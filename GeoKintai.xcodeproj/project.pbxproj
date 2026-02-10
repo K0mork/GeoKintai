@@ -21,6 +21,7 @@
 		51F5DCA69C25257622B50656 /* LocationProof.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDEB678F5F71E31F0E487024 /* LocationProof.swift */; };
 		5498CA4ABF549605B2190445 /* GeoKintaiCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0CF9A97550176F7815C57043 /* GeoKintaiCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5838101685B20C83141D6D4B /* GeoKintaiCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CF9A97550176F7815C57043 /* GeoKintaiCore.framework */; };
+		5B0C10EC3959FAD615F33442 /* StatusViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4B81D851D4C74AEE87784F3 /* StatusViewModel.swift */; };
 		66237319434DF46595615A87 /* LoggingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CABB2D518449DBC1107785B7 /* LoggingService.swift */; };
 		671774AD9AA0831DED00D273 /* StatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B241218C720597E04D8C87 /* StatusView.swift */; };
 		6B8A3EACB4EA8A03B9A165D0 /* UTCDateConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28D4641FEDDED5292ED09FA6 /* UTCDateConverter.swift */; };
@@ -127,6 +128,7 @@
 		D1ED9DEB89BE0E27EFD3B958 /* GeoKintaiApp.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = GeoKintaiApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8F49523C994F8DB3031F4F7 /* ExportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportService.swift; sourceTree = "<group>"; };
 		E28F3F226080C9C3E2982670 /* AttendanceCorrection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttendanceCorrection.swift; sourceTree = "<group>"; };
+		E4B81D851D4C74AEE87784F3 /* StatusViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusViewModel.swift; sourceTree = "<group>"; };
 		EBA8F76CB2687267EBA2E5DC /* WorkplaceRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkplaceRepository.swift; sourceTree = "<group>"; };
 		F7B4180C411ED8C1467FADF5 /* PermissionUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionUseCase.swift; sourceTree = "<group>"; };
 		F960E65000508457E15B506D /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
@@ -181,6 +183,7 @@
 				C65E56ABB92E3EC77D380CCA /* RootTabView.swift */,
 				53620C85502225F03E722DF2 /* SettingsView.swift */,
 				80B241218C720597E04D8C87 /* StatusView.swift */,
+				E4B81D851D4C74AEE87784F3 /* StatusViewModel.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -386,6 +389,7 @@
 				F54C5DAAE1EC5B0FB9B61529 /* RootTabView.swift in Sources */,
 				F8F615E8B354BA099184097B /* SettingsView.swift in Sources */,
 				671774AD9AA0831DED00D273 /* StatusView.swift in Sources */,
+				5B0C10EC3959FAD615F33442 /* StatusViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

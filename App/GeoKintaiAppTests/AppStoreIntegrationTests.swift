@@ -1,5 +1,6 @@
 import XCTest
 import GeoKintaiCore
+import UIKit
 @testable import GeoKintaiApp
 
 final class AppStoreIntegrationTests: XCTestCase {
@@ -165,6 +166,133 @@ final class AppStoreIntegrationTests: XCTestCase {
         XCTAssertTrue(store.workplaces.contains(where: { $0.name == "Retry Office" }))
         XCTAssertNil(store.lastErrorMessage)
     }
+
+    @MainActor
+    func testAppStore_whenUpdateWorkplaceWithValidInput_updatesStoredValues() {
+        let persistence = PersistenceController()
+        let workplace = Workplace(
+            id: UUID(uuidString: "66666666-AAAA-BBBB-CCCC-666666666666")!,
+            name: "Old Name",
+            latitude: 35.0,
+            longitude: 139.0,
+            radius: 100,
+            monitoringEnabled: true
+        )
+        persistence.workplaces.save(workplace)
+        let store = AppStore(
+            persistence: persistence,
+            permissionUseCase: PermissionUseCase(),
+            clock: SystemVerificationClock(),
+            regionMonitoringSyncService: RegionMonitoringSyncService(regionMonitor: InMemoryRegionMonitor())
+        )
+
+        store.updateWorkplace(
+            id: workplace.id,
+            name: "New Name",
+            latitudeText: "34.5",
+            longitudeText: "135.5",
+            radiusText: "250"
+        )
+
+        guard let updated = store.workplaces.first(where: { $0.id == workplace.id }) else {
+            XCTFail("Updated workplace not found")
+            return
+        }
+        XCTAssertEqual(updated.name, "New Name")
+        XCTAssertEqual(updated.latitude, 34.5, accuracy: 0.0001)
+        XCTAssertEqual(updated.longitude, 135.5, accuracy: 0.0001)
+        XCTAssertEqual(updated.radius, 250, accuracy: 0.0001)
+    }
+
+    @MainActor
+    func testAppStore_whenManualCorrectionReasonEmpty_rejectsAppend() {
+        let persistence = PersistenceController()
+        let workplace = Workplace(
+            id: UUID(uuidString: "77777777-AAAA-BBBB-CCCC-777777777777")!,
+            name: "Office",
+            latitude: 35.0,
+            longitude: 139.0,
+            radius: 100,
+            monitoringEnabled: true
+        )
+        persistence.workplaces.save(workplace)
+        let record = persistence.attendance.createOpenRecord(
+            workplaceId: workplace.id,
+            entryTime: Date(timeIntervalSince1970: 1_700_600_000)
+        )
+        let store = AppStore(
+            persistence: persistence,
+            permissionUseCase: PermissionUseCase(),
+            clock: SystemVerificationClock(),
+            regionMonitoringSyncService: RegionMonitoringSyncService(regionMonitor: InMemoryRegionMonitor())
+        )
+        let beforeCount = store.corrections.count
+
+        store.addManualCorrection(
+            recordId: record.id,
+            reason: "  ",
+            correctedEntryTime: Date(timeIntervalSince1970: 1_700_600_100),
+            correctedExitTime: nil
+        )
+
+        XCTAssertEqual(store.corrections.count, beforeCount)
+        XCTAssertTrue(store.lastErrorMessage?.contains("理由") == true)
+    }
+
+    @MainActor
+    func testAppStore_whenManualCorrectionValid_appendsCorrection() {
+        let persistence = PersistenceController()
+        let workplace = Workplace(
+            id: UUID(uuidString: "88888888-AAAA-BBBB-CCCC-888888888888")!,
+            name: "Office",
+            latitude: 35.0,
+            longitude: 139.0,
+            radius: 100,
+            monitoringEnabled: true
+        )
+        persistence.workplaces.save(workplace)
+        let entry = Date(timeIntervalSince1970: 1_700_700_000)
+        let record = persistence.attendance.createOpenRecord(
+            workplaceId: workplace.id,
+            entryTime: entry
+        )
+        let store = AppStore(
+            persistence: persistence,
+            permissionUseCase: PermissionUseCase(),
+            clock: SystemVerificationClock(),
+            regionMonitoringSyncService: RegionMonitoringSyncService(regionMonitor: InMemoryRegionMonitor())
+        )
+
+        store.addManualCorrection(
+            recordId: record.id,
+            reason: "打刻補正",
+            correctedEntryTime: entry.addingTimeInterval(120),
+            correctedExitTime: nil
+        )
+
+        XCTAssertEqual(store.corrections.count, 1)
+        XCTAssertEqual(store.corrections[0].attendanceRecordId, record.id)
+        XCTAssertEqual(store.corrections[0].reason, "打刻補正")
+        XCTAssertFalse(store.corrections[0].integrityHash.isEmpty)
+    }
+
+    @MainActor
+    func testAppStore_whenGuidanceIsOpenSettings_opensSystemSettings() {
+        let persistence = PersistenceController()
+        let opener = URLHandlerSpy()
+        let store = AppStore(
+            persistence: persistence,
+            permissionUseCase: PermissionUseCase(),
+            clock: SystemVerificationClock(),
+            regionMonitoringSyncService: RegionMonitoringSyncService(regionMonitor: InMemoryRegionMonitor()),
+            urlHandler: opener
+        )
+        store.permissionStatus = .denied
+
+        store.openAppSettings()
+
+        XCTAssertEqual(opener.openedURLs.last?.absoluteString, UIApplication.openSettingsURLString)
+    }
 }
 
 private struct FailingWritePerformerError: Error {}
@@ -183,5 +311,15 @@ private final class FailingWritePerformer: PersistenceWritePerformer {
             throw FailingWritePerformerError()
         }
         return action()
+    }
+}
+
+private final class URLHandlerSpy: URLHandling {
+    var openedURLs: [URL] = []
+
+    @discardableResult
+    func open(_ url: URL) -> Bool {
+        openedURLs.append(url)
+        return true
     }
 }

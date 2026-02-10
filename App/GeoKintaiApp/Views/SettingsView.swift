@@ -1,4 +1,5 @@
 import SwiftUI
+import GeoKintaiCore
 
 struct SettingsView: View {
     @EnvironmentObject private var store: AppStore
@@ -7,6 +8,7 @@ struct SettingsView: View {
     @State private var newLatitude = ""
     @State private var newLongitude = ""
     @State private var newRadius = ""
+    @State private var editingWorkplace: Workplace?
 
     var body: some View {
         Form {
@@ -55,15 +57,100 @@ struct SettingsView: View {
                                 )
                             )
 
-                            Button("削除", role: .destructive) {
-                                store.deleteWorkplace(id: workplace.id)
+                            HStack {
+                                Button("編集") {
+                                    editingWorkplace = workplace
+                                }
+
+                                Spacer()
+
+                                Button("削除", role: .destructive) {
+                                    store.deleteWorkplace(id: workplace.id)
+                                }
                             }
                         }
                         .padding(.vertical, 4)
                     }
                 }
             }
+
+            if let message = store.lastErrorMessage {
+                Section("メッセージ") {
+                    Text(message)
+                        .foregroundStyle(.red)
+                }
+            }
         }
         .navigationTitle("Settings")
+        .sheet(
+            isPresented: Binding(
+                get: { editingWorkplace != nil },
+                set: { isPresented in
+                    if !isPresented {
+                        editingWorkplace = nil
+                    }
+                }
+            )
+        ) {
+            if let editingWorkplace {
+                WorkplaceEditorSheet(workplace: editingWorkplace)
+            }
+        }
+    }
+}
+
+private struct WorkplaceEditorSheet: View {
+    @EnvironmentObject private var store: AppStore
+    @Environment(\.dismiss) private var dismiss
+
+    let workplace: Workplace
+
+    @State private var name = ""
+    @State private var latitude = ""
+    @State private var longitude = ""
+    @State private var radius = ""
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section("仕事場編集") {
+                    TextField("名称", text: $name)
+                    TextField("緯度", text: $latitude)
+                        .keyboardType(.decimalPad)
+                    TextField("経度", text: $longitude)
+                        .keyboardType(.decimalPad)
+                    TextField("半径(m)", text: $radius)
+                        .keyboardType(.decimalPad)
+                }
+            }
+            .navigationTitle("仕事場編集")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("閉じる") {
+                        dismiss()
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("保存") {
+                        store.updateWorkplace(
+                            id: workplace.id,
+                            name: name,
+                            latitudeText: latitude,
+                            longitudeText: longitude,
+                            radiusText: radius
+                        )
+                        if store.lastErrorMessage == nil {
+                            dismiss()
+                        }
+                    }
+                }
+            }
+        }
+        .onAppear {
+            name = workplace.name
+            latitude = String(workplace.latitude)
+            longitude = String(workplace.longitude)
+            radius = String(workplace.radius)
+        }
     }
 }

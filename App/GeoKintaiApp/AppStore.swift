@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import UIKit
 import GeoKintaiCore
 
 protocol PersistenceWritePerformer {
@@ -9,6 +10,19 @@ protocol PersistenceWritePerformer {
 struct DefaultPersistenceWritePerformer: PersistenceWritePerformer {
     func perform<T>(_ action: () -> T) throws -> T {
         action()
+    }
+}
+
+protocol URLHandling {
+    @discardableResult
+    func open(_ url: URL) -> Bool
+}
+
+struct UIApplicationURLHandler: URLHandling {
+    @discardableResult
+    func open(_ url: URL) -> Bool {
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        return true
     }
 }
 
@@ -40,6 +54,7 @@ final class AppStore: ObservableObject {
     private let clock: any VerificationClock
     private let regionMonitoringSyncService: RegionMonitoringSyncService
     private let writePerformer: any PersistenceWritePerformer
+    private let urlHandler: any URLHandling
 
     init(
         persistence: PersistenceController = PersistenceController(),
@@ -49,7 +64,8 @@ final class AppStore: ObservableObject {
             regionMonitor: InMemoryRegionMonitor()
         ),
         failureHandlingUseCase: FailureHandlingUseCase = FailureHandlingUseCase(),
-        writePerformer: any PersistenceWritePerformer = DefaultPersistenceWritePerformer()
+        writePerformer: any PersistenceWritePerformer = DefaultPersistenceWritePerformer(),
+        urlHandler: any URLHandling = UIApplicationURLHandler()
     ) {
         self.persistence = persistence
         self.permissionUseCase = permissionUseCase
@@ -59,6 +75,7 @@ final class AppStore: ObservableObject {
         self.regionMonitoringSyncService = regionMonitoringSyncService
         self.failureHandlingUseCase = failureHandlingUseCase
         self.writePerformer = writePerformer
+        self.urlHandler = urlHandler
         bootstrapIfNeeded()
         evaluatePermission()
         reloadAll()
@@ -66,34 +83,50 @@ final class AppStore: ObservableObject {
     }
 
     func addWorkplace(name: String, latitudeText: String, longitudeText: String, radiusText: String) {
-        let normalizedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !normalizedName.isEmpty else {
-            lastErrorMessage = "仕事場名を入力してください。"
-            return
-        }
-
-        guard let latitude = Double(latitudeText), let longitude = Double(longitudeText) else {
-            lastErrorMessage = "緯度・経度は数値で入力してください。"
-            return
-        }
-
-        let radius: Double
-        if radiusText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            radius = DomainDefaults.defaultWorkplaceRadiusMeters
-        } else if let parsed = Double(radiusText), parsed > 0 {
-            radius = parsed
-        } else {
-            lastErrorMessage = "半径は正の数値で入力してください。"
+        guard let input = validateWorkplaceInput(
+            name: name,
+            latitudeText: latitudeText,
+            longitudeText: longitudeText,
+            radiusText: radiusText
+        ) else {
             return
         }
 
         let workplace = Workplace(
-            name: normalizedName,
-            latitude: latitude,
-            longitude: longitude,
-            radius: radius,
+            name: input.name,
+            latitude: input.latitude,
+            longitude: input.longitude,
+            radius: input.radius,
             monitoringEnabled: true
         )
+        guard performWriteVoid({ persistence.workplaces.save(workplace) }) else {
+            return
+        }
+        lastErrorMessage = nil
+        reloadAll()
+        syncMonitoringIfNeeded()
+    }
+
+    func updateWorkplace(id: UUID, name: String, latitudeText: String, longitudeText: String, radiusText: String) {
+        guard var workplace = persistence.workplaces.fetchBy(id: id) else {
+            lastErrorMessage = "対象の仕事場が見つかりません。"
+            return
+        }
+
+        guard let input = validateWorkplaceInput(
+            name: name,
+            latitudeText: latitudeText,
+            longitudeText: longitudeText,
+            radiusText: radiusText
+        ) else {
+            return
+        }
+
+        workplace.name = input.name
+        workplace.latitude = input.latitude
+        workplace.longitude = input.longitude
+        workplace.radius = input.radius
+
         guard performWriteVoid({ persistence.workplaces.save(workplace) }) else {
             return
         }
@@ -227,30 +260,45 @@ final class AppStore: ObservableObject {
         reloadAll()
     }
 
-    func addSampleCorrection() {
-        guard let latestRecord = attendanceRecords.first else {
-            lastErrorMessage = "修正対象の勤務レコードがありません。"
+    func addManualCorrection(
+        recordId: UUID,
+        reason: String,
+        correctedEntryTime: Date,
+        correctedExitTime: Date?
+    ) {
+        let normalizedReason = reason.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !normalizedReason.isEmpty else {
+            lastErrorMessage = "修正理由を入力してください。"
+            return
+        }
+
+        if let correctedExitTime, correctedExitTime < correctedEntryTime {
+            lastErrorMessage = "退勤時刻は出勤時刻以降にしてください。"
+            return
+        }
+
+        guard let sourceRecord = persistence.attendance.fetchAll().first(where: { $0.id == recordId }) else {
+            lastErrorMessage = "修正対象の勤務レコードが見つかりません。"
             return
         }
 
         let before = AttendanceSnapshot(
-            entryTime: latestRecord.entryTime,
-            exitTime: latestRecord.exitTime
+            entryTime: sourceRecord.entryTime,
+            exitTime: sourceRecord.exitTime
         )
         let after = AttendanceSnapshot(
-            entryTime: latestRecord.entryTime.addingTimeInterval(60),
-            exitTime: latestRecord.exitTime
+            entryTime: correctedEntryTime,
+            exitTime: correctedExitTime
         )
 
         let draft = AttendanceCorrection(
-            attendanceRecordId: latestRecord.id,
-            reason: "手動修正サンプル",
+            attendanceRecordId: sourceRecord.id,
+            reason: normalizedReason,
             before: before,
             after: after,
             correctedAt: clock.now,
             integrityHash: ""
         )
-
         let correction = AttendanceCorrection(
             id: draft.id,
             attendanceRecordId: draft.attendanceRecordId,
@@ -260,10 +308,26 @@ final class AppStore: ObservableObject {
             correctedAt: draft.correctedAt,
             integrityHash: IntegrityHashService.hashCorrection(draft)
         )
+
         guard performWriteVoid({ persistence.corrections.append(correction) }) else {
             return
         }
+
+        lastErrorMessage = nil
         reloadAll()
+    }
+
+    func addSampleCorrection() {
+        guard let latestRecord = attendanceRecords.first else {
+            lastErrorMessage = "修正対象の勤務レコードがありません。"
+            return
+        }
+        addManualCorrection(
+            recordId: latestRecord.id,
+            reason: "手動修正サンプル",
+            correctedEntryTime: latestRecord.entryTime.addingTimeInterval(60),
+            correctedExitTime: latestRecord.exitTime
+        )
     }
 
     func exportCSV() {
@@ -272,6 +336,20 @@ final class AppStore: ObservableObject {
 
     func exportPDF() {
         export(format: .pdf)
+    }
+
+    func openAppSettings() {
+        guard permissionDecision.guidance == .openSettings else {
+            return
+        }
+        guard let url = URL(string: UIApplication.openSettingsURLString) else {
+            return
+        }
+        _ = urlHandler.open(url)
+    }
+
+    func workplaceName(for id: UUID) -> String {
+        workplaces.first(where: { $0.id == id })?.name ?? id.uuidString
     }
 
     private var selectedWorkplace: Workplace? {
@@ -384,5 +462,48 @@ final class AppStore: ObservableObject {
 
     private func performWriteVoid(_ operation: () -> Void) -> Bool {
         performWrite(operation) != nil
+    }
+
+    private struct ValidatedWorkplaceInput {
+        let name: String
+        let latitude: Double
+        let longitude: Double
+        let radius: Double
+    }
+
+    private func validateWorkplaceInput(
+        name: String,
+        latitudeText: String,
+        longitudeText: String,
+        radiusText: String
+    ) -> ValidatedWorkplaceInput? {
+        let normalizedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !normalizedName.isEmpty else {
+            lastErrorMessage = "仕事場名を入力してください。"
+            return nil
+        }
+
+        guard let latitude = Double(latitudeText), let longitude = Double(longitudeText) else {
+            lastErrorMessage = "緯度・経度は数値で入力してください。"
+            return nil
+        }
+
+        let normalizedRadiusText = radiusText.trimmingCharacters(in: .whitespacesAndNewlines)
+        let radius: Double
+        if normalizedRadiusText.isEmpty {
+            radius = DomainDefaults.defaultWorkplaceRadiusMeters
+        } else if let parsed = Double(normalizedRadiusText), parsed > 0 {
+            radius = parsed
+        } else {
+            lastErrorMessage = "半径は正の数値で入力してください。"
+            return nil
+        }
+
+        return ValidatedWorkplaceInput(
+            name: normalizedName,
+            latitude: latitude,
+            longitude: longitude,
+            radius: radius
+        )
     }
 }

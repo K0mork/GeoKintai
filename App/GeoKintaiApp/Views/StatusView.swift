@@ -1,10 +1,13 @@
 import SwiftUI
+import MapKit
 import GeoKintaiCore
 
 struct StatusView: View {
     @EnvironmentObject private var store: AppStore
 
     var body: some View {
+        let viewModel = StatusViewModel(store: store)
+
         Form {
             Section("権限") {
                 Picker("位置権限", selection: $store.permissionStatus) {
@@ -13,12 +16,27 @@ struct StatusView: View {
                     }
                 }
 
-                Text(store.permissionDecision.shouldRunAutoRecording ? "自動記録: 有効" : "自動記録: 停止")
+                Text(viewModel.shouldRunAutoRecording ? "自動記録: 有効" : "自動記録: 停止")
+                Text("監視中リージョン: \(viewModel.monitoredWorkplaceCount)件")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
 
-                if store.permissionDecision.guidance != .none {
-                    Text("案内: \(store.permissionDecision.guidance.displayName)")
+                if viewModel.permissionGuidance != .none {
+                    Text("案内: \(viewModel.permissionGuidance.displayName)")
                         .foregroundStyle(.secondary)
                         .font(.footnote)
+                }
+
+                if viewModel.hasPermissionWarning {
+                    Label("位置権限が不足しているため自動記録は停止中です。", systemImage: "exclamationmark.triangle.fill")
+                        .font(.footnote)
+                        .foregroundStyle(.orange)
+                }
+
+                if viewModel.canOpenSettings {
+                    Button("設定アプリを開く") {
+                        store.openAppSettings()
+                    }
                 }
             }
 
@@ -44,13 +62,31 @@ struct StatusView: View {
             }
 
             Section("現在状態") {
-                if let openRecord = store.attendanceRecords.first(where: { $0.exitTime == nil }) {
+                if let openRecord = viewModel.openRecord {
                     Text("勤務中")
                     Text("入室: \(openRecord.entryTime.shortDateTime)")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 } else {
                     Text("未勤務")
+                        .foregroundStyle(.secondary)
+                }
+            }
+
+            Section("ミニマップ") {
+                if let region = viewModel.mapRegion, let workplace = viewModel.selectedWorkplace {
+                    Map(initialPosition: .region(region)) {
+                        Marker(workplace.name, coordinate: region.center)
+                    }
+                    .frame(height: 180)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+
+                    Text("仕事場: \(workplace.name)")
+                    Text("半径: \(Int(workplace.radius))m")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                } else {
+                    Text("仕事場を選択すると位置を表示します。")
                         .foregroundStyle(.secondary)
                 }
             }
@@ -64,11 +100,26 @@ struct StatusView: View {
                     store.exportPDF()
                 }
 
-                if let payload = store.lastExport {
+                if let payload = viewModel.lastExport {
                     Text("最終出力: \(payload.format.displayName)")
+                    Text("生成時刻: \(payload.generatedAt.shortDateTime)")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
                     Text("Hash: \(payload.integrityHash)")
                         .font(.footnote)
                         .textSelection(.enabled)
+
+                    ForEach(Array(viewModel.exportPreviewLines.enumerated()), id: \.offset) { _, line in
+                        Text(line)
+                            .font(.caption2.monospaced())
+                            .foregroundStyle(.secondary)
+                    }
+                }
+
+                if let message = store.lastErrorMessage, message.contains("出力") || message.contains("エクスポート") {
+                    Button("再試行（CSV）") {
+                        store.exportCSV()
+                    }
                 }
             }
 

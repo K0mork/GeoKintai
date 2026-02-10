@@ -136,6 +136,30 @@ struct AttendanceFlowIntegrationTests {
         #expect(proofs.fetchBy(attendanceRecordId: recordIdB).first?.workplaceId == workplaceB.id)
     }
 
+    @Test("P3-023: test_attendanceFlow_whenCancelActiveVerifier_ignoresStaleState")
+    func test_attendanceFlow_whenCancelActiveVerifier_ignoresStaleState() {
+        let clock = TestClock(now: Date(timeIntervalSince1970: 1_700_504_000))
+        let attendance = AttendanceRepository()
+        let proofs = LocationProofRepository()
+        let coordinator = AttendanceFlowCoordinator(
+            attendanceRepository: attendance,
+            proofRepository: proofs,
+            clock: clock
+        )
+        let workplace = sampleWorkplace()
+
+        coordinator.handleDidEnter(workplace: workplace)
+        _ = coordinator.handleLocationUpdate(workplace: workplace, distanceFromCenterMeters: 10)
+        coordinator.cancel(workplaceId: workplace.id)
+
+        clock.advance(seconds: 600)
+        let outcome = coordinator.handleLocationUpdate(workplace: workplace, distanceFromCenterMeters: 5)
+
+        #expect(outcome == .none)
+        #expect(attendance.fetchBy(workplaceId: workplace.id).isEmpty)
+        #expect(proofs.fetchBy(workplaceId: workplace.id).isEmpty)
+    }
+
     private func sampleWorkplace(
         id: UUID = UUID(uuidString: "ABCDABCD-ABCD-ABCD-ABCD-ABCDABCDABCD")!,
         name: String = "Test Office"

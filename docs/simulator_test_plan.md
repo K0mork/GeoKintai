@@ -83,7 +83,7 @@
 | T-001 | 2026-02-10 | Codex | Pass | GPX再生 + `AttendanceFlowIntegrationTests` で確認（UI目視は未実施） | `scripts/run_simulator_gpx.sh <udid> SimulatedLocations/Commute_In.gpx` |
 | T-002 | 2026-02-10 | Codex | Pass | GPX再生 + `AttendanceFlowIntegrationTests` で確認（UI目視は未実施） | `scripts/run_simulator_gpx.sh <udid> SimulatedLocations/Commute_Out.gpx` |
 | T-003 | 2026-02-10 | Codex | Pass | GPX再生 + `AttendanceFlowIntegrationTests` で確認（UI目視は未実施） | `scripts/run_simulator_gpx.sh <udid> SimulatedLocations/Pass_By.gpx` |
-| T-004 | 2026-02-10 | Codex | Skip | アプリキル後挙動はシミュレータ制約が大きく、実機推奨 | [real_device_run_log_2026-02-10.md](real_device_run_log_2026-02-10.md) を参照（Pending） |
+| T-004 | 2026-02-10 | Codex | Skip | バックグラウンド連携実装は完了。キル後挙動はシミュレータ制約が大きく、最終確認は実機のみ | [real_device_run_log_2026-02-10.md](real_device_run_log_2026-02-10.md) を参照（Pending） |
 | T-005 | 2026-02-10 | Codex | Pass | GPX再生 + `AttendanceFlowIntegrationTests` で確認（UI目視は未実施） | `scripts/run_simulator_gpx.sh <udid> SimulatedLocations/Short_Stay.gpx` |
 | T-006 | 2026-02-10 | Codex | Pass | GPX再生 + `ExitVerifierTests` で確認（UI目視は未実施） | `scripts/run_simulator_gpx.sh <udid> SimulatedLocations/GPS_Drift.gpx` |
 | T-007 | 2026-02-10 | Codex | Pass | GPX再生 + `AttendanceFlowIntegrationTests` で確認（UI目視は未実施） | `scripts/run_simulator_gpx.sh <udid> SimulatedLocations/Multiple_Visits.gpx` |

@@ -108,4 +108,14 @@ public final class AttendanceFlowCoordinator {
 
         return .none
     }
+
+    public func cancel(workplaceId: UUID) {
+        stayVerifiers[workplaceId] = nil
+        exitVerifiers[workplaceId] = nil
+    }
+
+    public func cancelAll() {
+        stayVerifiers.removeAll()
+        exitVerifiers.removeAll()
+    }
 }

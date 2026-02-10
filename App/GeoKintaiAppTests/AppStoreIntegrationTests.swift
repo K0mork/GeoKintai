@@ -32,6 +32,34 @@ final class AppStoreIntegrationTests: XCTestCase {
     }
 
     @MainActor
+    func testAppStore_whenPermissionAlways_requestsRegionStateForMonitoredWorkplace() {
+        let persistence = PersistenceController()
+        let workplace = Workplace(
+            id: UUID(uuidString: "11111111-AAAA-BBBB-CCCC-222222222222")!,
+            name: "Office",
+            latitude: 35.0,
+            longitude: 139.0,
+            radius: 100,
+            monitoringEnabled: true
+        )
+        persistence.workplaces.save(workplace)
+        let backgroundClient = BackgroundLocationClientSpy()
+        let syncService = RegionMonitoringSyncService(regionMonitor: backgroundClient)
+        let store = AppStore(
+            persistence: persistence,
+            permissionUseCase: PermissionUseCase(),
+            clock: SystemVerificationClock(),
+            regionMonitoringSyncService: syncService,
+            backgroundLocationClient: backgroundClient
+        )
+
+        store.permissionStatus = .always
+
+        XCTAssertTrue(store.monitoredWorkplaceIds.contains(workplace.id))
+        XCTAssertTrue(backgroundClient.requestedStateWorkplaceIds.contains(workplace.id))
+    }
+
+    @MainActor
     func testAppStore_whenWorkplaceMonitoringDisabled_resyncsMonitoredSet() {
         let persistence = PersistenceController()
         let workplace = Workplace(
@@ -121,6 +149,107 @@ final class AppStoreIntegrationTests: XCTestCase {
         XCTAssertTrue(store.monitoredWorkplaceIds.isEmpty)
         XCTAssertEqual(store.attendanceRecords.count, 0)
         XCTAssertTrue(store.lastErrorMessage?.contains("権限") == true)
+    }
+
+    @MainActor
+    func testAppStore_whenLaunchInsideWorkplace_for5Minutes_createsAttendanceAutomatically() {
+        let clock = TestVerificationClock(now: Date(timeIntervalSince1970: 1_701_000_000))
+        let persistence = PersistenceController()
+        let workplace = Workplace(
+            id: UUID(uuidString: "33333333-AAAA-BBBB-CCCC-444444444444")!,
+            name: "Office",
+            latitude: 35.0,
+            longitude: 139.0,
+            radius: 100,
+            monitoringEnabled: true
+        )
+        persistence.workplaces.save(workplace)
+        let backgroundClient = BackgroundLocationClientSpy()
+        let syncService = RegionMonitoringSyncService(regionMonitor: backgroundClient)
+        let store = AppStore(
+            persistence: persistence,
+            permissionUseCase: PermissionUseCase(),
+            clock: clock,
+            regionMonitoringSyncService: syncService,
+            backgroundLocationClient: backgroundClient
+        )
+        store.permissionStatus = .always
+
+        backgroundClient.emitDidDetermineState(workplaceId: workplace.id, isInside: true)
+        backgroundClient.emitLocation(latitude: 35.0, longitude: 139.0)
+        clock.advance(seconds: 300)
+        backgroundClient.emitLocation(latitude: 35.0, longitude: 139.0)
+
+        XCTAssertEqual(store.attendanceRecords.count, 1)
+        XCTAssertEqual(store.attendanceRecords[0].workplaceId, workplace.id)
+        XCTAssertEqual(store.proofs.first?.reason, .stayCheck)
+        XCTAssertTrue(store.logs.contains(where: { $0.message.contains("didEnterRegion") }))
+        XCTAssertTrue(store.logs.contains(where: { $0.message.contains("stayConfirmed") }))
+        XCTAssertGreaterThanOrEqual(backgroundClient.startUpdatingLocationCallCount, 1)
+        XCTAssertGreaterThanOrEqual(backgroundClient.stopUpdatingLocationCallCount, 1)
+    }
+
+    @MainActor
+    func testAppStore_whenLaunchInsideButLeaveEarly_doesNotCreateAttendance() {
+        let clock = TestVerificationClock(now: Date(timeIntervalSince1970: 1_701_010_000))
+        let persistence = PersistenceController()
+        let workplace = Workplace(
+            id: UUID(uuidString: "33333333-AAAA-BBBB-CCCC-555555555555")!,
+            name: "Office",
+            latitude: 35.0,
+            longitude: 139.0,
+            radius: 100,
+            monitoringEnabled: true
+        )
+        persistence.workplaces.save(workplace)
+        let backgroundClient = BackgroundLocationClientSpy()
+        let syncService = RegionMonitoringSyncService(regionMonitor: backgroundClient)
+        let store = AppStore(
+            persistence: persistence,
+            permissionUseCase: PermissionUseCase(),
+            clock: clock,
+            regionMonitoringSyncService: syncService,
+            backgroundLocationClient: backgroundClient
+        )
+        store.permissionStatus = .always
+
+        backgroundClient.emitDidDetermineState(workplaceId: workplace.id, isInside: true)
+        backgroundClient.emitLocation(latitude: 35.0, longitude: 139.0)
+        clock.advance(seconds: 120)
+        backgroundClient.emitLocation(latitude: 35.003, longitude: 139.003)
+
+        XCTAssertEqual(store.attendanceRecords.count, 0)
+        XCTAssertEqual(store.proofs.count, 0)
+        XCTAssertGreaterThanOrEqual(backgroundClient.stopUpdatingLocationCallCount, 1)
+    }
+
+    @MainActor
+    func testAppStore_whenLocationUnavailable_showsRetryMessageAndLogsFailure() {
+        let persistence = PersistenceController()
+        let workplace = Workplace(
+            id: UUID(uuidString: "33333333-AAAA-BBBB-CCCC-666666666666")!,
+            name: "Office",
+            latitude: 35.0,
+            longitude: 139.0,
+            radius: 100,
+            monitoringEnabled: true
+        )
+        persistence.workplaces.save(workplace)
+        let backgroundClient = BackgroundLocationClientSpy()
+        let syncService = RegionMonitoringSyncService(regionMonitor: backgroundClient)
+        let store = AppStore(
+            persistence: persistence,
+            permissionUseCase: PermissionUseCase(),
+            clock: SystemVerificationClock(),
+            regionMonitoringSyncService: syncService,
+            backgroundLocationClient: backgroundClient
+        )
+        store.permissionStatus = .always
+
+        backgroundClient.emitLocationError(message: "timeout")
+
+        XCTAssertTrue(store.lastErrorMessage?.contains("位置情報の取得に失敗") == true)
+        XCTAssertTrue(store.logs.contains(where: { $0.message.contains("locationUnavailable") }))
     }
 
     @MainActor
@@ -576,5 +705,102 @@ private final class URLHandlerSpy: URLHandling {
     func open(_ url: URL) -> Bool {
         openedURLs.append(url)
         return true
+    }
+}
+
+private final class TestVerificationClock: VerificationClock {
+    private var current: Date
+
+    init(now: Date) {
+        self.current = now
+    }
+
+    var now: Date {
+        current
+    }
+
+    func advance(seconds: TimeInterval) {
+        current = current.addingTimeInterval(seconds)
+    }
+}
+
+private final class BackgroundLocationClientSpy: BackgroundLocationClient {
+    var onAuthorizationChanged: ((LocationPermissionStatus) -> Void)?
+    var onDidEnterRegion: ((UUID) -> Void)?
+    var onDidExitRegion: ((UUID) -> Void)?
+    var onDidDetermineState: ((UUID, Bool) -> Void)?
+    var onLocationUpdate: ((LocationCoordinateSample) -> Void)?
+    var onLocationError: ((String) -> Void)?
+
+    private var regionsByWorkplaceId: [UUID: MonitoredRegion] = [:]
+    private var currentStatus: LocationPermissionStatus = .notDetermined
+
+    private(set) var requestAlwaysAuthorizationCallCount = 0
+    private(set) var startUpdatingLocationCallCount = 0
+    private(set) var stopUpdatingLocationCallCount = 0
+    private(set) var requestedStateWorkplaceIds: [UUID] = []
+
+    func currentPermissionStatus() -> LocationPermissionStatus {
+        currentStatus
+    }
+
+    func requestAlwaysAuthorization() {
+        requestAlwaysAuthorizationCallCount += 1
+    }
+
+    func startUpdatingLocation() {
+        startUpdatingLocationCallCount += 1
+    }
+
+    func stopUpdatingLocation() {
+        stopUpdatingLocationCallCount += 1
+    }
+
+    func requestState(for workplaceId: UUID) {
+        requestedStateWorkplaceIds.append(workplaceId)
+    }
+
+    func startMonitoring(region: MonitoredRegion) {
+        regionsByWorkplaceId[region.workplaceId] = region
+    }
+
+    func stopMonitoring(workplaceId: UUID) {
+        regionsByWorkplaceId.removeValue(forKey: workplaceId)
+    }
+
+    func monitoredWorkplaceIds() -> Set<UUID> {
+        Set(regionsByWorkplaceId.keys)
+    }
+
+    func emitAuthorization(status: LocationPermissionStatus) {
+        currentStatus = status
+        onAuthorizationChanged?(status)
+    }
+
+    func emitDidEnter(workplaceId: UUID) {
+        onDidEnterRegion?(workplaceId)
+    }
+
+    func emitDidExit(workplaceId: UUID) {
+        onDidExitRegion?(workplaceId)
+    }
+
+    func emitDidDetermineState(workplaceId: UUID, isInside: Bool) {
+        onDidDetermineState?(workplaceId, isInside)
+    }
+
+    func emitLocation(latitude: Double, longitude: Double, accuracy: Double = 5) {
+        onLocationUpdate?(
+            LocationCoordinateSample(
+                timestamp: Date(timeIntervalSince1970: 1_701_000_000),
+                latitude: latitude,
+                longitude: longitude,
+                horizontalAccuracy: accuracy
+            )
+        )
+    }
+
+    func emitLocationError(message: String) {
+        onLocationError?(message)
     }
 }

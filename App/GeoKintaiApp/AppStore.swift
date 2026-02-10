@@ -1,6 +1,7 @@
 import Foundation
 import SwiftUI
 import UIKit
+import CoreLocation
 import GeoKintaiCore
 
 protocol PersistenceWritePerformer {
@@ -53,8 +54,12 @@ final class AppStore: ObservableObject {
     private let failureHandlingUseCase: FailureHandlingUseCase
     private let clock: any VerificationClock
     private let regionMonitoringSyncService: RegionMonitoringSyncService
+    private let backgroundLocationClient: any BackgroundLocationClient
+    private let attendanceFlowCoordinator: AttendanceFlowCoordinator
     private let writePerformer: any PersistenceWritePerformer
     private let urlHandler: any URLHandling
+    private var pendingStayWorkplaceIds: Set<UUID> = []
+    private var pendingExitWorkplaceIds: Set<UUID> = []
 
     init(
         persistence: PersistenceController = PersistenceController(),
@@ -63,6 +68,7 @@ final class AppStore: ObservableObject {
         regionMonitoringSyncService: RegionMonitoringSyncService = RegionMonitoringSyncService(
             regionMonitor: InMemoryRegionMonitor()
         ),
+        backgroundLocationClient: any BackgroundLocationClient = NoopBackgroundLocationClient(),
         failureHandlingUseCase: FailureHandlingUseCase = FailureHandlingUseCase(),
         writePerformer: any PersistenceWritePerformer = DefaultPersistenceWritePerformer(),
         urlHandler: any URLHandling = UIApplicationURLHandler()
@@ -73,13 +79,24 @@ final class AppStore: ObservableObject {
         self.exportService = ExportService(clock: clock)
         self.logger = LoggingService(clock: clock)
         self.regionMonitoringSyncService = regionMonitoringSyncService
+        self.backgroundLocationClient = backgroundLocationClient
+        self.attendanceFlowCoordinator = AttendanceFlowCoordinator(
+            attendanceRepository: persistence.attendance,
+            proofRepository: persistence.locationProofs,
+            clock: clock
+        )
         self.failureHandlingUseCase = failureHandlingUseCase
         self.writePerformer = writePerformer
         self.urlHandler = urlHandler
+        configureBackgroundLocationCallbacks()
+        permissionStatus = backgroundLocationClient.currentPermissionStatus()
         bootstrapIfNeeded()
         evaluatePermission()
         reloadAll()
         syncMonitoringIfNeeded()
+        if permissionStatus == .notDetermined {
+            backgroundLocationClient.requestAlwaysAuthorization()
+        }
     }
 
     func addWorkplace(name: String, latitudeText: String, longitudeText: String, radiusText: String) {
@@ -359,6 +376,152 @@ final class AppStore: ObservableObject {
         return persistence.workplaces.fetchBy(id: selectedWorkplaceId)
     }
 
+    private func configureBackgroundLocationCallbacks() {
+        backgroundLocationClient.onAuthorizationChanged = { [weak self] status in
+            self?.permissionStatus = status
+        }
+
+        backgroundLocationClient.onDidEnterRegion = { [weak self] workplaceId in
+            self?.handleDidEnterRegion(workplaceId: workplaceId)
+        }
+
+        backgroundLocationClient.onDidExitRegion = { [weak self] workplaceId in
+            self?.handleDidExitRegion(workplaceId: workplaceId)
+        }
+
+        backgroundLocationClient.onDidDetermineState = { [weak self] workplaceId, isInside in
+            guard isInside else {
+                return
+            }
+            self?.handleDidEnterRegion(workplaceId: workplaceId)
+        }
+
+        backgroundLocationClient.onLocationUpdate = { [weak self] sample in
+            self?.handleLocationUpdate(sample)
+        }
+
+        backgroundLocationClient.onLocationError = { [weak self] message in
+            self?.handleLocationUnavailable(message)
+        }
+    }
+
+    private func handleDidEnterRegion(workplaceId: UUID) {
+        guard permissionDecision.shouldRunAutoRecording else {
+            return
+        }
+        guard !pendingStayWorkplaceIds.contains(workplaceId) else {
+            return
+        }
+        guard persistence.attendance.fetchOpenRecord(workplaceId: workplaceId) == nil else {
+            return
+        }
+        guard let workplace = persistence.workplaces.fetchBy(id: workplaceId), workplace.monitoringEnabled else {
+            return
+        }
+
+        pendingStayWorkplaceIds.insert(workplaceId)
+        attendanceFlowCoordinator.handleDidEnter(workplace: workplace)
+        logger.log(.didEnterRegion(workplaceId: workplaceId))
+        updateLocationUpdateSubscription()
+        reloadAll()
+    }
+
+    private func handleDidExitRegion(workplaceId: UUID) {
+        guard permissionDecision.shouldRunAutoRecording else {
+            return
+        }
+        guard !pendingExitWorkplaceIds.contains(workplaceId) else {
+            return
+        }
+        guard persistence.attendance.fetchOpenRecord(workplaceId: workplaceId) != nil else {
+            return
+        }
+        guard let workplace = persistence.workplaces.fetchBy(id: workplaceId), workplace.monitoringEnabled else {
+            return
+        }
+
+        pendingExitWorkplaceIds.insert(workplaceId)
+        attendanceFlowCoordinator.handleDidExit(workplace: workplace)
+        logger.log(.didExitRegion(workplaceId: workplaceId))
+        updateLocationUpdateSubscription()
+        reloadAll()
+    }
+
+    private func handleLocationUpdate(_ sample: LocationCoordinateSample) {
+        guard permissionDecision.shouldRunAutoRecording else {
+            return
+        }
+
+        let activeIds = pendingStayWorkplaceIds.union(pendingExitWorkplaceIds)
+        guard !activeIds.isEmpty else {
+            updateLocationUpdateSubscription()
+            return
+        }
+
+        for workplaceId in activeIds {
+            guard let workplace = persistence.workplaces.fetchBy(id: workplaceId) else {
+                pendingStayWorkplaceIds.remove(workplaceId)
+                pendingExitWorkplaceIds.remove(workplaceId)
+                attendanceFlowCoordinator.cancel(workplaceId: workplaceId)
+                continue
+            }
+
+            let distance = distanceFromCenterMeters(sample: sample, workplace: workplace)
+            let outcome = attendanceFlowCoordinator.handleLocationUpdate(
+                workplace: workplace,
+                distanceFromCenterMeters: distance
+            )
+            handleCoordinatorOutcome(outcome, workplaceId: workplaceId)
+        }
+
+        updateLocationUpdateSubscription()
+        reloadAll()
+    }
+
+    private func handleCoordinatorOutcome(_ outcome: AttendanceFlowCoordinator.Outcome, workplaceId: UUID) {
+        switch outcome {
+        case .none:
+            break
+        case .entryConfirmed(let recordId):
+            pendingStayWorkplaceIds.remove(workplaceId)
+            logger.log(.stayConfirmed(recordId: recordId))
+            lastErrorMessage = nil
+        case .entryCancelled:
+            pendingStayWorkplaceIds.remove(workplaceId)
+        case .exitConfirmed(let recordId):
+            pendingExitWorkplaceIds.remove(workplaceId)
+            logger.log(.exitConfirmed(recordId: recordId))
+            lastErrorMessage = nil
+        }
+    }
+
+    private func distanceFromCenterMeters(sample: LocationCoordinateSample, workplace: Workplace) -> Double {
+        let current = CLLocation(latitude: sample.latitude, longitude: sample.longitude)
+        let center = CLLocation(latitude: workplace.latitude, longitude: workplace.longitude)
+        return current.distance(from: center)
+    }
+
+    private func updateLocationUpdateSubscription() {
+        guard permissionDecision.shouldRunAutoRecording else {
+            backgroundLocationClient.stopUpdatingLocation()
+            return
+        }
+
+        let hasPendingVerification = !pendingStayWorkplaceIds.isEmpty || !pendingExitWorkplaceIds.isEmpty
+        if hasPendingVerification {
+            backgroundLocationClient.startUpdatingLocation()
+        } else {
+            backgroundLocationClient.stopUpdatingLocation()
+        }
+    }
+
+    private func handleLocationUnavailable(_ detail: String) {
+        let action = failureHandlingUseCase.handle(.locationUnavailable)
+        lastErrorMessage = action.userMessage
+        logger.log(.failure(type: .locationUnavailable, detail: detail))
+        reloadAll()
+    }
+
     private func bootstrapIfNeeded() {
         guard persistence.workplaces.fetchAll().isEmpty else {
             return
@@ -394,6 +557,12 @@ final class AppStore: ObservableObject {
             status: permissionStatus,
             requiresBackgroundRecording: true
         )
+        if !permissionDecision.shouldRunAutoRecording {
+            pendingStayWorkplaceIds.removeAll()
+            pendingExitWorkplaceIds.removeAll()
+            attendanceFlowCoordinator.cancelAll()
+            backgroundLocationClient.stopUpdatingLocation()
+        }
         syncMonitoringIfNeeded()
     }
 
@@ -433,11 +602,28 @@ final class AppStore: ObservableObject {
     }
 
     private func syncMonitoringIfNeeded() {
+        let previousIds = monitoredWorkplaceIds
         let synchronizedIds = regionMonitoringSyncService.sync(
             workplaces: persistence.workplaces.fetchAll(),
             allowMonitoring: permissionDecision.shouldRunAutoRecording
         )
         monitoredWorkplaceIds = synchronizedIds
+
+        let removedIds = previousIds.subtracting(synchronizedIds)
+        for workplaceId in removedIds {
+            pendingStayWorkplaceIds.remove(workplaceId)
+            pendingExitWorkplaceIds.remove(workplaceId)
+            attendanceFlowCoordinator.cancel(workplaceId: workplaceId)
+        }
+
+        if permissionDecision.shouldRunAutoRecording {
+            let newlyMonitoredIds = synchronizedIds.subtracting(previousIds)
+            for workplaceId in newlyMonitoredIds {
+                backgroundLocationClient.requestState(for: workplaceId)
+            }
+        }
+
+        updateLocationUpdateSubscription()
     }
 
     @discardableResult

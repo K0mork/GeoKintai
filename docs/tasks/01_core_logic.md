@@ -13,7 +13,9 @@
 - [ ] **Model Definition** (`GeoKintai.xcdatamodeld`)
     - [ ] Define Entity: `Workplace` (attributes: id, name, lat, lon, radius, monitoringEnabled)
     - [ ] Define Entity: `AttendanceRecord` (attributes: id, entryTime, exitTime, isManual, note)
+    - [ ] Define Entity: `AttendanceCorrection` (attributes: recordId, old/new times, reason, editedAt, integrityHash)
     - [ ] Define Entity: `LocationProof` (attributes: id, lat, lon, accuracy, altitude, speed, reason)
+    - [ ] Add integrity hash field to evidence entities (`AttendanceCorrection`, `LocationProof`)
     - [ ] Generate NSManagedObject subclasses (manual/none codegen suggested for flexibility)
 - [ ] **PersistenceController (TDD)**
     - [ ] **RED**: Create `PersistenceControllerTests.swift`. Write test to verify `NSPersistentContainer` loads.
@@ -27,8 +29,13 @@
     - [ ] **REFACTOR**: Extract Core Data context injection for easier testing.
 - [ ] **AttendanceRepository**
     - [ ] **RED**: Create `AttendanceRepositoryTests.swift`. Write tests for check-in/check-out logic.
+    - [ ] **RED**: Add test to prevent duplicate active record (`exitTime == nil`) per workplace.
     - [ ] **GREEN**: Implement `AttendanceRepository` methods.
     - [ ] **REFACTOR**: Optimize fetch requests.
+- [ ] **AttendanceCorrectionRepository**
+    - [ ] **RED**: Create `AttendanceCorrectionRepositoryTests.swift` for append-only correction records.
+    - [ ] **GREEN**: Implement correction append and fetch timeline methods.
+    - [ ] **REFACTOR**: Prevent update/delete operations on correction entity.
 
 ## 1.4 Location Service (Core Logic) (TDD)
 - [ ] **LocationManager Wrapper**
@@ -42,3 +49,21 @@
     - [ ] **RED**: Test background task creation triggers.
     - [ ] **GREEN**: Implement `didEnterRegion` -> `beginBackgroundTask` flow.
 
+## 1.5 Domain Verifiers (TDD)
+- [ ] **StayVerifier**
+    - [ ] **RED**: Write tests for stay confirmation with threshold fixed to 5 min.
+    - [ ] **GREEN**: Implement radius/time-based confirmation.
+- [ ] **ExitVerifier**
+    - [ ] **RED**: Write tests for exit confirmation with re-check window fixed to 2 min.
+    - [ ] **GREEN**: Implement drift-tolerant exit decision.
+- [ ] **Clock Abstraction**
+    - [ ] **RED**: Test deterministic time control without `sleep`.
+    - [ ] **GREEN**: Inject mockable clock into verifiers/services.
+
+## 1.6 Integrity (TDD)
+- [ ] **IntegrityHashService**
+    - [ ] **RED**: Write tests for deterministic hash generation from evidence fields.
+    - [ ] **GREEN**: Implement hash generation and verification.
+- [ ] **Audit Policy Guard**
+    - [ ] **RED**: Write tests that correction logs cannot be overwritten/deleted.
+    - [ ] **GREEN**: Implement append-only guard at repository layer.

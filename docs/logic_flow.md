@@ -54,7 +54,7 @@ sequenceDiagram
     activate App
     App->>App: beginBackgroundTask
     App->>App: startUpdatingLocation
-    App->>App: Start Timer (e.g. 2 mins verification)
+    App->>App: Start Timer (2 mins verification)
     
     loop Verification
         OS->>App: didUpdateLocations

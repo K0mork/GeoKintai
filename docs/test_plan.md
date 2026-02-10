@@ -24,7 +24,7 @@ Xcodeのシミュレータは、GPX（GPS Exchange Format）ファイルを読�
 ## 2. Xcodeでの実行手順
 
 ### 手順A: デバッグ実行中の操作
-1. アプリをSimulaterで起動（**Debugモード**）。
+1. アプリをSimulatorで起動（**Debugモード**）。
 2. Xcodeのメニューバー `Debug` > `Simulate Location` を選択。
 3. `Add GPX File to Workspace...` から作成したGPXを選択。
 4. シミュレーションが開始され、青い矢印（現在地）が動き出す。

@@ -19,14 +19,29 @@
 - [ ] **Detail View**
     - Map showing `LocationProof` points
     - Metadata display (Note, Manual flag)
+    - Edit action (manual correction of entry/exit time)
+    - Show correction reason and edited flag for auditability
+    - Show correction timeline (before/after values + editedAt)
 
 ## 2.3 Settings Tab
 - [ ] **Workplace List**
     - List registered locations
-    - Swipe to define (Delete)
+    - Swipe to delete
     - `+` Button for Add
 - [ ] **Workplace Edit Form**
     - `TextField` (Name)
     - `Map` (Pin Drop / Drag)
     - `Slider` (Radius)
     - Save logic
+
+## 2.4 Export
+- [ ] **Export UI**
+    - CSV export action
+    - PDF export action
+    - Include export generated time and integrity hash in output preview
+    - Error handling and user feedback
+- [ ] **Export ViewModel (TDD)**
+    - **RED**: Write tests for output field completeness and empty-state handling
+    - **RED**: Write tests for integrity hash display and mismatch warning
+    - **GREEN**: Implement export use case wiring
+    - **REFACTOR**: Separate formatting concern from UI state

@@ -57,6 +57,14 @@ xcodebuild test \
   -scheme GeoKintaiApp \
   -destination "id=<simulator_udid>" \
   -only-testing:GeoKintaiAppTests/AppStoreIntegrationTests/testAppStore_whenPermissionDowngraded_stopsMonitoringAndPreventsAutoRecord
+
+xcodebuild test \
+  -project GeoKintai.xcodeproj \
+  -scheme GeoKintaiApp \
+  -destination "id=<simulator_udid>" \
+  -only-testing:GeoKintaiAppTests/AppStoreIntegrationTests/testAppStore_whenAddWorkplaceLatitudeOutOfRange_rejectsSave \
+  -only-testing:GeoKintaiAppTests/AppStoreIntegrationTests/testAppStore_whenAddWorkplaceLongitudeOutOfRange_rejectsSave \
+  -only-testing:GeoKintaiAppTests/AppStoreIntegrationTests/testAppStore_whenAddWorkplaceCoordinateHasWhitespace_savesSuccessfully
 ```
 
 ## 4. 失敗時トリアージ

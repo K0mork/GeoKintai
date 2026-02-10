@@ -41,6 +41,13 @@
 - [x] 追加/変更分が `requirements_traceability.md` に反映済み
 - [x] 実装・テスト・ドキュメントが同じスコープで揃っている
 
+## 7. 最新更新（2026-02-10）
+- [x] `FR-01 / AC-01` の入力バリデーションを強化（緯度/経度の範囲チェック）
+- [x] 座標入力の前後空白を許容する挙動を追加
+- [x] `AppStoreIntegrationTests` に FR-01 関連の回帰テスト3件を追加
+- [x] `./scripts/run_all_checks.sh` で全チェックのグリーンを確認
+- [x] ドキュメント（仕様/受け入れ基準/トレーサビリティ/テスト運用）を同期更新
+
 ## 関連ドキュメント
 - [tdd_rules.md](tdd_rules.md)
 - [tdd_guide.md](tdd_guide.md)

@@ -96,6 +96,11 @@
 
 補足: 実行ログは `docs/simulator_run_log_2026-02-10.txt` を参照。
 
+### 6.2 補助検証（2026-02-10）
+| 観点 | 実施日 | 実施者 | 結果 | 根拠テスト | 実行コマンド |
+|---|---|---|---|---|---|
+| FR-01 入力バリデーション（緯度/経度範囲、前後空白許容） | 2026-02-10 | Codex | Pass | `AppStoreIntegrationTests` の FR-01 関連3ケース | `xcodebuild ... -only-testing:GeoKintaiAppTests/AppStoreIntegrationTests/testAppStore_whenAddWorkplaceLatitudeOutOfRange_rejectsSave -only-testing:GeoKintaiAppTests/AppStoreIntegrationTests/testAppStore_whenAddWorkplaceLongitudeOutOfRange_rejectsSave -only-testing:GeoKintaiAppTests/AppStoreIntegrationTests/testAppStore_whenAddWorkplaceCoordinateHasWhitespace_savesSuccessfully test` |
+
 ## 7. 注意事項
 - シミュレータ結果は実機と差分があり得る。
 - 重要ケース（T-001, T-002, T-006, T-012）は実機再確認を推奨する。

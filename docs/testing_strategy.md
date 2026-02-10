@@ -30,19 +30,21 @@
 
 ## 3. 実行コマンド例
 
-`<Scheme>` と `<TestTarget>` はプロジェクトに合わせて置換する。
-
 ```bash
-# 全体テスト
-xcodebuild test \
-  -scheme <Scheme> \
-  -destination "platform=iOS Simulator,name=iPhone 16,OS=latest"
+# 推奨: 全体チェック（Swift Package + iOS App Test）
+./scripts/run_all_checks.sh
 
-# 特定テストのみ
+# UDID を固定して実行したい場合
+./scripts/run_all_checks.sh <simulator_udid>
+
+# 個別実行（必要時）
+swift test
+
 xcodebuild test \
-  -scheme <Scheme> \
-  -destination "platform=iOS Simulator,name=iPhone 16,OS=latest" \
-  -only-testing:<TestTarget>/<TestClass>/<testMethod>
+  -project GeoKintai.xcodeproj \
+  -scheme GeoKintaiApp \
+  -destination "id=<simulator_udid>" \
+  -only-testing:GeoKintaiAppTests/AppStoreIntegrationTests/testAppStore_whenPermissionDowngraded_stopsMonitoringAndPreventsAutoRecord
 ```
 
 ## 4. 失敗時トリアージ

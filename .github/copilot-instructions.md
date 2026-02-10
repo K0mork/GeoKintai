@@ -1,8 +1,8 @@
 # Copilot Instructions (GeoKintai)
 
 ## Build, test, lint
-- Build/test are expected via Xcode (no CLI scripts found yet). Use Xcode Test targets (XCTest/XCUITest) once the project is created.
-- Simulator validation uses GPX files (see `docs/test_plan.md`); run from Xcode: Debug > Simulate Location.
+- Use `./scripts/run_all_checks.sh` for local and CI checks (runs `swift test` + `xcodebuild test`).
+- Simulator validation uses GPX files (see `docs/simulator_test_plan.md`); run from Xcode: Debug > Simulate Location.
 
 ## High-level architecture
 - iOS app that auto-records workplace attendance in the background using Core Location region monitoring and a verification window (enter/exit events trigger a short high-accuracy tracking window before confirming stay/exit).

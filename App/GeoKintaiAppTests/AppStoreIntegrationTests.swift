@@ -227,6 +227,28 @@ final class AppStoreIntegrationTests: XCTestCase {
     }
 
     @MainActor
+    func testAppStore_whenAddWorkplaceLongitudeOutOfRange_rejectsSave() {
+        let persistence = PersistenceController()
+        let store = AppStore(
+            persistence: persistence,
+            permissionUseCase: PermissionUseCase(),
+            clock: SystemVerificationClock(),
+            regionMonitoringSyncService: RegionMonitoringSyncService(regionMonitor: InMemoryRegionMonitor())
+        )
+        let beforeCount = store.workplaces.count
+
+        store.addWorkplace(
+            name: "Invalid Lon",
+            latitudeText: "35.68",
+            longitudeText: "181.0",
+            radiusText: "120"
+        )
+
+        XCTAssertEqual(store.workplaces.count, beforeCount)
+        XCTAssertTrue(store.lastErrorMessage?.contains("経度は -180 〜 180") == true)
+    }
+
+    @MainActor
     func testAppStore_whenAddWorkplaceCoordinateHasWhitespace_savesSuccessfully() {
         let persistence = PersistenceController()
         let store = AppStore(

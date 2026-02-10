@@ -15,6 +15,8 @@
 - Given: ユーザーが設定画面にいる
 - When: 仕事場を保存する
 - Then: `name`, `latitude`, `longitude`, `radius`, `monitoringEnabled` が永続化される
+- Then: 緯度・経度入力の前後空白は除去して保存できる
+- Then: 緯度は `-90...90`、経度は `-180...180` の範囲外なら保存されない
 - Then: 削除時は監視対象リージョンから除外される
 
 ### AC-02 出勤確定（FR-02）

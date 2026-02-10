@@ -23,6 +23,8 @@ GeoKintai は、iOS の位置情報機能を使って「仕事場への到着/�
 ### FR-01 仕事場管理
 - 仕事場を追加/編集/削除できる。
 - 各仕事場は `name`, `latitude`, `longitude`, `radius`, `monitoringEnabled` を持つ。
+- `latitude` は `-90...90`、`longitude` は `-180...180` の範囲で扱う。
+- 緯度・経度入力の前後空白は除去して数値解釈する。
 
 ### FR-02 出勤確定（滞在判定）
 - `didEnterRegion` を契機に滞在判定を開始する。

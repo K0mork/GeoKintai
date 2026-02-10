@@ -5,7 +5,7 @@
 
 | Req ID | 要件概要 | 受け入れ基準 | Unit Test（例） | Simulator Test | 実装タスク | 状態 |
 |---|---|---|---|---|---|---|
-| FR-01 | 仕事場 CRUD | AC-01 | `WorkplaceRepositoryTests`, `AppStoreIntegrationTests` | T-011 | P1-010, P1-020, P2-030, P2-031, P2-032 | Done |
+| FR-01 | 仕事場 CRUD | AC-01 | `WorkplaceRepositoryTests`, `AppStoreIntegrationTests`（`testAppStore_whenAddWorkplaceLatitudeOutOfRange_rejectsSave`, `testAppStore_whenAddWorkplaceCoordinateHasWhitespace_savesSuccessfully`） | T-011 | P1-010, P1-020, P2-030, P2-031, P2-032 | Done |
 | FR-02 | 出勤確定（滞在判定） | AC-02 | `StayVerifierTests`, `AttendanceFlowIntegrationTests` | T-001, T-008 | P1-030, P3-020 | Done |
 | FR-03 | 通過誤検知防止 | AC-03 | `StayVerifierTests`, `AttendanceFlowIntegrationTests` | T-003, T-005, T-009 | P1-030, P3-020 | Done |
 | FR-04 | 退勤確定（再確認） | AC-04 | `ExitVerifierTests`, `AttendanceFlowIntegrationTests` | T-002, T-006 | P1-031, P3-020 | Done |

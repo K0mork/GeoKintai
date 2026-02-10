@@ -205,6 +205,50 @@ final class AppStoreIntegrationTests: XCTestCase {
     }
 
     @MainActor
+    func testAppStore_whenAddWorkplaceLatitudeOutOfRange_rejectsSave() {
+        let persistence = PersistenceController()
+        let store = AppStore(
+            persistence: persistence,
+            permissionUseCase: PermissionUseCase(),
+            clock: SystemVerificationClock(),
+            regionMonitoringSyncService: RegionMonitoringSyncService(regionMonitor: InMemoryRegionMonitor())
+        )
+        let beforeCount = store.workplaces.count
+
+        store.addWorkplace(
+            name: "Invalid Lat",
+            latitudeText: "91.0",
+            longitudeText: "139.76",
+            radiusText: "120"
+        )
+
+        XCTAssertEqual(store.workplaces.count, beforeCount)
+        XCTAssertTrue(store.lastErrorMessage?.contains("緯度は -90 〜 90") == true)
+    }
+
+    @MainActor
+    func testAppStore_whenAddWorkplaceCoordinateHasWhitespace_savesSuccessfully() {
+        let persistence = PersistenceController()
+        let store = AppStore(
+            persistence: persistence,
+            permissionUseCase: PermissionUseCase(),
+            clock: SystemVerificationClock(),
+            regionMonitoringSyncService: RegionMonitoringSyncService(regionMonitor: InMemoryRegionMonitor())
+        )
+        let beforeCount = store.workplaces.count
+
+        store.addWorkplace(
+            name: "Whitespace Coordinate",
+            latitudeText: " 35.68 ",
+            longitudeText: "\n139.76\t",
+            radiusText: "120"
+        )
+
+        XCTAssertEqual(store.workplaces.count, beforeCount + 1)
+        XCTAssertNil(store.lastErrorMessage)
+    }
+
+    @MainActor
     func testAppStore_whenManualCorrectionReasonEmpty_rejectsAppend() {
         let persistence = PersistenceController()
         let workplace = Workplace(

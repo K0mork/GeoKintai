@@ -483,8 +483,21 @@ final class AppStore: ObservableObject {
             return nil
         }
 
-        guard let latitude = Double(latitudeText), let longitude = Double(longitudeText) else {
+        let normalizedLatitudeText = latitudeText.trimmingCharacters(in: .whitespacesAndNewlines)
+        let normalizedLongitudeText = longitudeText.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard let latitude = Double(normalizedLatitudeText), let longitude = Double(normalizedLongitudeText) else {
             lastErrorMessage = "緯度・経度は数値で入力してください。"
+            return nil
+        }
+
+        guard (-90...90).contains(latitude) else {
+            lastErrorMessage = "緯度は -90 〜 90 の範囲で入力してください。"
+            return nil
+        }
+
+        guard (-180...180).contains(longitude) else {
+            lastErrorMessage = "経度は -180 〜 180 の範囲で入力してください。"
             return nil
         }
 

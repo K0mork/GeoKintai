@@ -55,13 +55,13 @@ swift test
 xcodebuild test \
   -project GeoKintai.xcodeproj \
   -scheme GeoKintaiApp \
-  -destination "id=<simulator_udid>" \
+  -destination "platform=iOS Simulator,id=<simulator_udid>,arch=arm64" \
   -only-testing:GeoKintaiAppTests/AppStoreIntegrationTests/testAppStore_whenPermissionDowngraded_stopsMonitoringAndPreventsAutoRecord
 
 xcodebuild test \
   -project GeoKintai.xcodeproj \
   -scheme GeoKintaiApp \
-  -destination "id=<simulator_udid>" \
+  -destination "platform=iOS Simulator,id=<simulator_udid>,arch=arm64" \
   -only-testing:GeoKintaiAppTests/AppStoreIntegrationTests/testAppStore_whenAddWorkplaceLatitudeOutOfRange_rejectsSave \
   -only-testing:GeoKintaiAppTests/AppStoreIntegrationTests/testAppStore_whenAddWorkplaceLongitudeOutOfRange_rejectsSave \
   -only-testing:GeoKintaiAppTests/AppStoreIntegrationTests/testAppStore_whenAddWorkplaceCoordinateHasWhitespace_savesSuccessfully
@@ -72,7 +72,7 @@ xcodebuild test \
 - 既存テスト失敗は回帰として最優先で修正する。
 - 不安定テストは `sleep` と実時間依存を排除する。
 - 要件差分が原因なら実装前に `acceptance_criteria.md` を更新する。
-- `xcodebuild test` 実行時に `[ResourceManifest] Failed to locate resource "default.csv"` が出る場合がある。現状はテスト結果に影響しない既知警告として扱い、失敗時のみ追加調査する。
+- `xcodebuild test` 実行時に `[PPT] Error creating the CFMessagePort...` が出る場合がある。これはシミュレータ実行時の既知ノイズのため、`run_all_checks.sh` では該当1行のみフィルタして判定ノイズを除去している。
 
 ## 5. 品質ゲート
 - `Red -> Green -> Refactor` の履歴を追跡可能である。

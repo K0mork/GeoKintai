@@ -82,7 +82,7 @@ run_case \
   xcodebuild \
   -project "$project_root/GeoKintai.xcodeproj" \
   -scheme GeoKintaiApp \
-  -destination "id=$simulator_udid" \
+  -destination "platform=iOS Simulator,id=$simulator_udid,arch=arm64" \
   -only-testing:GeoKintaiAppTests/AppStoreIntegrationTests/testAppStore_whenPermissionDowngraded_stopsMonitoringAndPreventsAutoRecord \
   test
 

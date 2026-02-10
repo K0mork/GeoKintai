@@ -46,8 +46,15 @@
 - [x] 座標入力の前後空白を許容する挙動を追加
 - [x] `AppStoreIntegrationTests` に FR-01 関連の回帰テスト3件を追加
 - [x] 不足していた異常系テストを補強（削除時監視除外、更新失敗、退勤失敗、手動修正失敗、エクスポート失敗）
+- [x] CI/ローカル実行時の主要警告を整理し、対策を実装（destination重複、AppIntents metadata、Map起因の起動警告）
 - [x] `./scripts/run_all_checks.sh` で全チェックのグリーンを確認
 - [x] ドキュメント（仕様/受け入れ基準/トレーサビリティ/テスト運用）を同期更新
+
+## 8. 警告潰しチェックリスト（2026-02-10）
+- [x] `xcodebuild -destination` を一意指定に変更し `Using the first of multiple matching destinations` を解消
+- [x] `AppIntents` 依存アンカーファイルを追加し `Metadata extraction skipped. No AppIntents.framework dependency found.` を解消
+- [x] XCTest 実行時はミニマップ描画を省略し `[ResourceManifest] default.csv` / `CAMetalLayer ... setDrawableSize` を解消
+- [x] シミュレータ由来の `[PPT] Error creating the CFMessagePort...` は `run_all_checks.sh` で該当1行のみフィルタ
 
 ## 関連ドキュメント
 - [tdd_rules.md](tdd_rules.md)

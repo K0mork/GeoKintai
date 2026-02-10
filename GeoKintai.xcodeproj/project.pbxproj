@@ -34,6 +34,7 @@
 		D1D1DF4591CBB17B168178EA /* AttendanceCorrectionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B5C1089A1E7CB23C372C69C /* AttendanceCorrectionRepository.swift */; };
 		D1F4A65BB0E153D826D3D91F /* ExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F49523C994F8DB3031F4F7 /* ExportService.swift */; };
 		D594A349BE9509F752121054 /* GeoKintaiCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CF9A97550176F7815C57043 /* GeoKintaiCore.framework */; };
+		D5BDF943A99B083B33F3CF46 /* AppIntentsDependency.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE2F82E1D686454149D1CED3 /* AppIntentsDependency.swift */; };
 		E2A0AA86E60EE0FC8F32B0F6 /* RegionMonitoringSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA246A72A26B2A376CF1EE5E /* RegionMonitoringSyncService.swift */; };
 		E8A3125BF45B44B8A68A8AF4 /* IntegrityHashService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA37442A58D55DB2F55BF53 /* IntegrityHashService.swift */; };
 		ECA2AABBB529DAAA6D87C117 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F960E65000508457E15B506D /* HistoryView.swift */; };
@@ -42,6 +43,7 @@
 		F8F615E8B354BA099184097B /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53620C85502225F03E722DF2 /* SettingsView.swift */; };
 		F93C33ABAE95A12553C439A6 /* LocationProofRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C48A2C85B3214F7AFC7FA42 /* LocationProofRepository.swift */; };
 		FAC34CA3D39B37683B980A0F /* AttendanceRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0816A1C84A443EA1C6A86E0 /* AttendanceRecord.swift */; };
+		FD564BF85846DAECA8AD88C4 /* AppIntentsDependency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8818C0E0F138FE9977A22364 /* AppIntentsDependency.swift */; };
 		FF73BC02EB976C0BD150DE52 /* DomainDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = C042F1204815C956CF9E953F /* DomainDefaults.swift */; };
 		FFA1B2BFACA9E9CFC3151474 /* AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E95EA4D5F4FBA15A855258 /* AppStore.swift */; };
 /* End PBXBuildFile section */
@@ -109,6 +111,7 @@
 		76055BDB134023C5916ED5FD /* Workplace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Workplace.swift; sourceTree = "<group>"; };
 		80168BAE45004FCB4774673A /* GeoKintaiAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoKintaiAppTests.swift; sourceTree = "<group>"; };
 		80B241218C720597E04D8C87 /* StatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusView.swift; sourceTree = "<group>"; };
+		8818C0E0F138FE9977A22364 /* AppIntentsDependency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntentsDependency.swift; sourceTree = "<group>"; };
 		89196BEA452ADD8B0E4B3BF3 /* VerificationClock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationClock.swift; sourceTree = "<group>"; };
 		89AC11E1319AC65A1CEA1187 /* ExitVerifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExitVerifier.swift; sourceTree = "<group>"; };
 		9BA37442A58D55DB2F55BF53 /* IntegrityHashService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrityHashService.swift; sourceTree = "<group>"; };
@@ -118,6 +121,7 @@
 		B1C20C4485ED0873E81DC853 /* AttendanceRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttendanceRepository.swift; sourceTree = "<group>"; };
 		B9DDE70F9659EFF0F8A1EF67 /* DateFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatting.swift; sourceTree = "<group>"; };
 		BAF204A2A5BFC29196F8A44F /* GeoKintaiApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoKintaiApp.swift; sourceTree = "<group>"; };
+		BE2F82E1D686454149D1CED3 /* AppIntentsDependency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntentsDependency.swift; sourceTree = "<group>"; };
 		BF4C3826F8BBDACE198F3682 /* AppendOnlyGuard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppendOnlyGuard.swift; sourceTree = "<group>"; };
 		C042F1204815C956CF9E953F /* DomainDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainDefaults.swift; sourceTree = "<group>"; };
 		C4E95EA4D5F4FBA15A855258 /* AppStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStore.swift; sourceTree = "<group>"; };
@@ -168,6 +172,7 @@
 		4459F6B3D6F357E03A7930A9 /* GeoKintaiAppTests */ = {
 			isa = PBXGroup;
 			children = (
+				BE2F82E1D686454149D1CED3 /* AppIntentsDependency.swift */,
 				4279B7D86A120A0B177EEFB9 /* AppStoreIntegrationTests.swift */,
 				80168BAE45004FCB4774673A /* GeoKintaiAppTests.swift */,
 			);
@@ -191,6 +196,7 @@
 		BC3D9EA229AF0049D45E3918 /* GeoKintaiApp */ = {
 			isa = PBXGroup;
 			children = (
+				8818C0E0F138FE9977A22364 /* AppIntentsDependency.swift */,
 				C4E95EA4D5F4FBA15A855258 /* AppStore.swift */,
 				BAF204A2A5BFC29196F8A44F /* GeoKintaiApp.swift */,
 				4D18EA23E8EFD9E6516A989F /* Info.plist */,
@@ -343,6 +349,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D5BDF943A99B083B33F3CF46 /* AppIntentsDependency.swift in Sources */,
 				108C8C27ED1885C7FC3EBF7B /* AppStoreIntegrationTests.swift in Sources */,
 				0BAE856CE1C276DAFCF74852 /* GeoKintaiAppTests.swift in Sources */,
 			);
@@ -382,6 +389,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FD564BF85846DAECA8AD88C4 /* AppIntentsDependency.swift in Sources */,
 				FFA1B2BFACA9E9CFC3151474 /* AppStore.swift in Sources */,
 				109AD95292EA508511155FBE /* DateFormatting.swift in Sources */,
 				2135D65A9672E5031013FA3A /* GeoKintaiApp.swift in Sources */,
@@ -418,6 +426,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				ENABLE_APP_INTENTS_METADATA_GENERATION = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -439,6 +448,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "";
+				ENABLE_APP_INTENTS_METADATA_GENERATION = NO;
 				INFOPLIST_FILE = App/GeoKintaiApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -458,6 +468,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "";
+				ENABLE_APP_INTENTS_METADATA_GENERATION = NO;
 				INFOPLIST_FILE = App/GeoKintaiApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -530,6 +541,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				ENABLE_APP_INTENTS_METADATA_GENERATION = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -553,6 +565,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_APP_INTENTS_METADATA_GENERATION = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -640,6 +653,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_APP_INTENTS_METADATA_GENERATION = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;

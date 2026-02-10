@@ -4,6 +4,8 @@ import GeoKintaiCore
 
 struct StatusView: View {
     @EnvironmentObject private var store: AppStore
+    private let isRunningUnderXCTest =
+        ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
 
     var body: some View {
         let viewModel = StatusViewModel(store: store)
@@ -74,7 +76,10 @@ struct StatusView: View {
             }
 
             Section("ミニマップ") {
-                if let region = viewModel.mapRegion, let workplace = viewModel.selectedWorkplace {
+                if isRunningUnderXCTest {
+                    Text("テスト実行中はミニマップを省略します。")
+                        .foregroundStyle(.secondary)
+                } else if let region = viewModel.mapRegion, let workplace = viewModel.selectedWorkplace {
                     Map(initialPosition: .region(region)) {
                         Marker(workplace.name, coordinate: region.center)
                     }

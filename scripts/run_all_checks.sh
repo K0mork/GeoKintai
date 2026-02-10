@@ -46,7 +46,7 @@ echo "[4/4] Running Xcode app tests on simulator: $simulator_udid"
 xcodebuild \
   -project "$project_file" \
   -scheme "$scheme" \
-  -destination "id=$simulator_udid" \
-  test
+  -destination "platform=iOS Simulator,id=$simulator_udid,arch=arm64" \
+  test 2>&1 | sed '/\[PPT\] Error creating the CFMessagePort needed to communicate with PPT\./d'
 
 echo "All checks passed."

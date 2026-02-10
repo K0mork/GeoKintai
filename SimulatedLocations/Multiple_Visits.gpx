@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="GeoKintai" xmlns="http://www.topografix.com/GPX/1/1">
+  <trk>
+    <name>Multiple Visits</name>
+    <trkseg>
+      <trkpt lat="35.679300" lon="139.763200"><time>2026-02-10T04:00:00Z</time></trkpt>
+      <trkpt lat="35.681236" lon="139.767125"><time>2026-02-10T04:05:00Z</time></trkpt>
+      <trkpt lat="35.681240" lon="139.767120"><time>2026-02-10T04:10:00Z</time></trkpt>
+      <trkpt lat="35.679300" lon="139.763200"><time>2026-02-10T04:15:00Z</time></trkpt>
+      <trkpt lat="35.681236" lon="139.767125"><time>2026-02-10T04:25:00Z</time></trkpt>
+      <trkpt lat="35.681245" lon="139.767130"><time>2026-02-10T04:30:00Z</time></trkpt>
+      <trkpt lat="35.679100" lon="139.762900"><time>2026-02-10T04:35:00Z</time></trkpt>
+    </trkseg>
+  </trk>
+</gpx>

@@ -23,6 +23,8 @@
 | Fast_Transit.gpx | 高速通過 | FR-03 |
 | Late_Night.gpx | 深夜帯 | NFR-01 |
 
+補足: GPXファイルはリポジトリ直下の `SimulatedLocations/` に配置する。
+
 ### 2.2 実行前チェック
 - [ ] 仕事場が登録済み
 - [ ] `monitoringEnabled = true`
@@ -32,8 +34,9 @@
 ## 3. 実行手順
 1. Simulator でアプリを起動する（Debug）。
 2. `Debug > Simulate Location` で GPX を選択する。
-3. バックグラウンド確認は `Shift + Command + H` でホームへ戻す。
-4. UI状態、履歴、ログを結果表に記録する。
+3. CLI 実行する場合は `scripts/run_simulator_gpx.sh <simulator_udid> <gpx_file>` を利用する。
+4. バックグラウンド確認は `Shift + Command + H` でホームへ戻す。
+5. UI状態、履歴、ログを結果表に記録する。
 
 ## 4. ケース一覧
 

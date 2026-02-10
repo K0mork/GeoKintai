@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="GeoKintai" xmlns="http://www.topografix.com/GPX/1/1">
+  <trk>
+    <name>Late Night</name>
+    <trkseg>
+      <trkpt lat="35.679900" lon="139.764700"><time>2026-02-10T14:50:00Z</time></trkpt>
+      <trkpt lat="35.681236" lon="139.767125"><time>2026-02-10T14:55:00Z</time></trkpt>
+      <trkpt lat="35.681240" lon="139.767120"><time>2026-02-10T15:00:00Z</time></trkpt>
+      <trkpt lat="35.681250" lon="139.767130"><time>2026-02-10T15:05:00Z</time></trkpt>
+      <trkpt lat="35.679900" lon="139.764700"><time>2026-02-10T15:10:00Z</time></trkpt>
+    </trkseg>
+  </trk>
+</gpx>

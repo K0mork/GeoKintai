@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="GeoKintai" xmlns="http://www.topografix.com/GPX/1/1">
+  <trk>
+    <name>Commute Out</name>
+    <trkseg>
+      <trkpt lat="35.681236" lon="139.767125"><time>2026-02-10T09:00:00Z</time></trkpt>
+      <trkpt lat="35.681300" lon="139.767200"><time>2026-02-10T09:01:00Z</time></trkpt>
+      <trkpt lat="35.680900" lon="139.766300"><time>2026-02-10T09:02:00Z</time></trkpt>
+      <trkpt lat="35.680000" lon="139.764600"><time>2026-02-10T09:03:00Z</time></trkpt>
+      <trkpt lat="35.679200" lon="139.763000"><time>2026-02-10T09:04:00Z</time></trkpt>
+      <trkpt lat="35.678500" lon="139.761500"><time>2026-02-10T09:05:00Z</time></trkpt>
+    </trkseg>
+  </trk>
+</gpx>

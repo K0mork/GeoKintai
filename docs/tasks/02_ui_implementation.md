@@ -1,47 +1,34 @@
-# Phase 2: UI Implementation (Native Look & Feel)
+# Phase 2: UI 実装タスク
 
-## 2.1 Dashboard (Status Tab)
-- [ ] **ViewModel Setup**
-    - Observe `AttendanceRepository`
-    - Status State (On Duty / Off Duty)
-- [ ] **UI Components (`.insetGrouped` List)**
-    - Section: Current Status (Large Text/Icon)
-    - Section: Map (Mini Map showing current loc & workplace)
-    - Section: Actions (Button: Check In / Check Out)
+目的: Native iOS ルックを維持しつつ、主要ユースケースを UI で完結させる。
 
-## 2.2 History Tab
-- [ ] **ViewModel Setup**
-    - Fetch Records (Sorted by Date Desc)
-    - Grouping logic (by Month/Day)
-- [ ] **List View**
-    - `NavigationLink` to Detail
-    - Row: Workplace Name + Time Range
-- [ ] **Detail View**
-    - Map showing `LocationProof` points
-    - Metadata display (Note, Manual flag)
-    - Edit action (manual correction of entry/exit time)
-    - Show correction reason and edited flag for auditability
-    - Show correction timeline (before/after values + editedAt)
+## 1. Status タブ
+- [ ] P2-010 `StatusViewModel` 実装（勤務中/未勤務の状態表示）
+- [ ] P2-011 現在状態セクション実装
+- [ ] P2-012 ミニマップセクション実装
+- [ ] P2-013 手動出勤/退勤ボタン導線実装
 
-## 2.3 Settings Tab
-- [ ] **Workplace List**
-    - List registered locations
-    - Swipe to delete
-    - `+` Button for Add
-- [ ] **Workplace Edit Form**
-    - `TextField` (Name)
-    - `Map` (Pin Drop / Drag)
-    - `Slider` (Radius)
-    - Save logic
+## 2. History タブ
+- [ ] P2-020 履歴一覧（降順、日付グルーピング）
+- [ ] P2-021 履歴詳細（LocationProof 表示）
+- [ ] P2-022 手動修正 UI（理由必須）
+- [ ] P2-023 修正履歴タイムライン表示（FR-06）
 
-## 2.4 Export
-- [ ] **Export UI**
-    - CSV export action
-    - PDF export action
-    - Include export generated time and integrity hash in output preview
-    - Error handling and user feedback
-- [ ] **Export ViewModel (TDD)**
-    - **RED**: Write tests for output field completeness and empty-state handling
-    - **RED**: Write tests for integrity hash display and mismatch warning
-    - **GREEN**: Implement export use case wiring
-    - **REFACTOR**: Separate formatting concern from UI state
+## 3. Settings タブ
+- [ ] P2-030 仕事場一覧（追加/削除/有効切替）
+- [ ] P2-031 仕事場編集フォーム（名称、座標、半径）
+- [ ] P2-032 仕事場保存時の入力バリデーション
+
+## 4. エクスポート
+- [ ] P2-040 CSV/PDF 出力 UI 実装（FR-08）
+- [ ] P2-041 出力プレビューに生成時刻/整合性ハッシュ表示
+- [ ] P2-042 失敗時エラーメッセージと再試行導線
+
+## 5. 権限導線
+- [ ] P2-050 `Always` 権限未満時の警告表示（FR-09）
+- [ ] P2-051 設定アプリ遷移導線を実装
+
+## 6. 完了条件
+- [ ] 主要フロー（仕事場設定、出退勤確認、履歴確認、修正、出力）が UI で完了する
+- [ ] `FR-01`, `FR-06`, `FR-08`, `FR-09` 対応機能が操作可能
+- [ ] `requirements_traceability.md` を更新済み

@@ -1,24 +1,36 @@
-# Phase 3: Integration & Verification
+# Phase 3: Integration & Verification タスク
 
-## 3.1 Integration
-- [ ] **App Launch Flow**
-    - `GeoKintaiApp`: Inject Persistence
-    - `onAppear`: Request Permissions & Sync Regions
-- [ ] **Dependencies**
-    - Connect `WorkplaceRepository` changes to `LocationManager.syncMonitoredRegions()`
+目的: コンポーネント統合と受け入れ検証を完了させる。
 
-## 3.2 Verification
-- [ ] **Automated Tests**
-    - Unit Tests for Repository CRUD
-    - Logic Tests for Timer duration
-    - Permission downgrade behavior tests
-    - Export output contract tests (CSV/PDF)
-    - Integrity hash verification tests
-    - Append-only correction audit tests
-- [ ] **Simulator Tests**
-    - Create GPX files (`SimulatedLocations/`)
-    - Verify `Commute_In.gpx` triggers Check-In
-    - Verify `Pass_By.gpx` does NOT trigger Check-In
-    - Verify permission change (`Always` -> `When In Use`) disables background detection
-    - Verify multiple workplaces keep records isolated
-    - Verify correction timeline appears after manual edits
+## 1. アプリ統合
+- [ ] P3-010 `GeoKintaiApp` で依存注入を統合
+- [ ] P3-011 起動時に権限確認 + 監視リージョン同期
+- [ ] P3-012 仕事場更新時に監視設定を再同期
+
+## 2. 統合テスト
+- [ ] P3-020 入域/滞在/退域の統合テスト
+- [ ] P3-021 複数仕事場の分離テスト
+- [ ] P3-022 権限低下時の安全動作テスト
+
+## 3. エクスポート検証
+- [ ] P3-030 CSV 出力契約テスト（列/必須項目）
+- [ ] P3-031 PDF 出力契約テスト
+- [ ] P3-032 整合性ハッシュ再検証テスト
+
+## 4. 可観測性
+- [ ] P3-040 主要イベントログ出力を実装（NFR-05）
+- [ ] P3-041 失敗時ログに原因分類を付与
+
+## 5. 異常系安全性
+- [ ] P3-050 位置取得失敗時の保護動作テスト（NFR-06）
+- [ ] P3-051 永続化失敗時のリカバリ導線実装
+
+## 6. シミュレータ検証
+- [ ] P3-060 `T-001` 〜 `T-013` を実行
+- [ ] P3-061 主要ケース（T-001, T-002, T-006, T-012）を重点確認
+- [ ] P3-062 結果を `simulator_test_plan.md` のテンプレートに記録
+
+## 7. 完了条件
+- [ ] 受け入れ基準 `AC-01` 〜 `AC-10` を満たす
+- [ ] 非機能基準 `NFC-01` 〜 `NFC-06` を満たす
+- [ ] `requirements_traceability.md` の状態が更新されている

@@ -27,12 +27,12 @@
 - [x] その日の対象 `FR-*` / `AC-*` を宣言して着手
 - [x] サイクル単位で小さくコミットする
 - [x] 区切りで `push` してリモートへ反映する
-- [ ] 未完了項目は翌日の先頭に繰り越し記録する
+- [x] 未完了項目は翌日の先頭に繰り越し記録する
 
 ## 5. PR前チェック
 - [x] 変更対象の Unit Test が全てグリーン
 - [x] 主要 Integration / Simulator ケースを実施
-- [ ] [simulator_test_plan.md](simulator_test_plan.md) の該当 `T-*` 結果を更新
+- [x] [simulator_test_plan.md](simulator_test_plan.md) の該当 `T-*` 結果を更新
 - [x] 要件・受け入れ基準・トレーサビリティの整合を確認
 - [x] ドキュメントのリンク切れがない
 

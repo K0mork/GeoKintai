@@ -76,6 +76,25 @@
 |---|---|---|---|---|---|
 | T-xxx | YYYY-MM-DD | Name | Pass/Fail | なし/詳細 | 必要時のみ |
 
+### 6.1 実施結果（2026-02-10）
+| ケースID | 実施日 | 実施者 | 結果 | 逸脱内容 | 再現手順 |
+|---|---|---|---|---|---|
+| T-001 | 2026-02-10 | Codex | Pass | GPX再生 + `AttendanceFlowIntegrationTests` で確認（UI目視は未実施） | `scripts/run_simulator_gpx.sh <udid> SimulatedLocations/Commute_In.gpx` |
+| T-002 | 2026-02-10 | Codex | Pass | GPX再生 + `AttendanceFlowIntegrationTests` で確認（UI目視は未実施） | `scripts/run_simulator_gpx.sh <udid> SimulatedLocations/Commute_Out.gpx` |
+| T-003 | 2026-02-10 | Codex | Pass | GPX再生 + `AttendanceFlowIntegrationTests` で確認（UI目視は未実施） | `scripts/run_simulator_gpx.sh <udid> SimulatedLocations/Pass_By.gpx` |
+| T-004 | 2026-02-10 | Codex | Skip | アプリキル後挙動はシミュレータ制約が大きく、実機推奨 | 実機で再検証予定 |
+| T-005 | 2026-02-10 | Codex | Pass | GPX再生 + `AttendanceFlowIntegrationTests` で確認（UI目視は未実施） | `scripts/run_simulator_gpx.sh <udid> SimulatedLocations/Short_Stay.gpx` |
+| T-006 | 2026-02-10 | Codex | Pass | GPX再生 + `ExitVerifierTests` で確認（UI目視は未実施） | `scripts/run_simulator_gpx.sh <udid> SimulatedLocations/GPS_Drift.gpx` |
+| T-007 | 2026-02-10 | Codex | Pass | GPX再生 + `AttendanceFlowIntegrationTests` で確認（UI目視は未実施） | `scripts/run_simulator_gpx.sh <udid> SimulatedLocations/Multiple_Visits.gpx` |
+| T-008 | 2026-02-10 | Codex | Pass | GPX再生 + `StayVerifierTests` で確認（UI目視は未実施） | `scripts/run_simulator_gpx.sh <udid> SimulatedLocations/Boundary_Edge.gpx` |
+| T-009 | 2026-02-10 | Codex | Pass | GPX再生 + `StayVerifierTests` で確認（UI目視は未実施） | `scripts/run_simulator_gpx.sh <udid> SimulatedLocations/Fast_Transit.gpx` |
+| T-010 | 2026-02-10 | Codex | Pass | GPX再生 + `TimeZoneConversionTests` で確認（UI目視は未実施） | `scripts/run_simulator_gpx.sh <udid> SimulatedLocations/Late_Night.gpx` |
+| T-011 | 2026-02-10 | Codex | Pass | `RegionRoutingTests` と統合テストで分離確認（UI目視は未実施） | `swift test --filter test_regionRouter_whenMultipleBindings_routesToCorrectWorkplace` |
+| T-012 | 2026-02-10 | Codex | Pass | `AppStoreIntegrationTests` で権限低下時の安全動作を確認 | `xcodebuild ... -only-testing:GeoKintaiAppTests/AppStoreIntegrationTests/testAppStore_whenPermissionDowngraded_stopsMonitoringAndPreventsAutoRecord test` |
+| T-013 | 2026-02-10 | Codex | Pass | `FailureHandlingTests` で異常時保護動作を確認（機内モードそのものは未操作） | `swift test --filter test_failureHandling_whenLocationUnavailable_preservesDataAndRetries` |
+
+補足: 実行ログは `docs/simulator_run_log_2026-02-10.txt` を参照。
+
 ## 7. 注意事項
 - シミュレータ結果は実機と差分があり得る。
 - 重要ケース（T-001, T-002, T-006, T-012）は実機再確認を推奨する。

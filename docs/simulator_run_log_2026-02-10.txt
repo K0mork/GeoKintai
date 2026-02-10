@@ -1,0 +1,79 @@
+[2026-02-10] START Commute_In.gpx
+Monitoring boot status for iPhone 16 (BC01A0A1-E769-42C5-B790-963E39F8312C).
+Device already booted, nothing to do.
+
+Parsed 7 waypoints
+[2026-02-10] PASS  Commute_In.gpx
+[2026-02-10] START Commute_Out.gpx
+Monitoring boot status for iPhone 16 (BC01A0A1-E769-42C5-B790-963E39F8312C).
+Device already booted, nothing to do.
+
+Parsed 6 waypoints
+[2026-02-10] PASS  Commute_Out.gpx
+[2026-02-10] START Pass_By.gpx
+Monitoring boot status for iPhone 16 (BC01A0A1-E769-42C5-B790-963E39F8312C).
+Device already booted, nothing to do.
+
+Parsed 6 waypoints
+[2026-02-10] PASS  Pass_By.gpx
+[2026-02-10] START Short_Stay.gpx
+Monitoring boot status for iPhone 16 (BC01A0A1-E769-42C5-B790-963E39F8312C).
+Device already booted, nothing to do.
+
+Parsed 6 waypoints
+[2026-02-10] PASS  Short_Stay.gpx
+[2026-02-10] START GPS_Drift.gpx
+Monitoring boot status for iPhone 16 (BC01A0A1-E769-42C5-B790-963E39F8312C).
+Device already booted, nothing to do.
+
+Parsed 6 waypoints
+[2026-02-10] PASS  GPS_Drift.gpx
+[2026-02-10] START Multiple_Visits.gpx
+Monitoring boot status for iPhone 16 (BC01A0A1-E769-42C5-B790-963E39F8312C).
+Device already booted, nothing to do.
+
+Parsed 7 waypoints
+[2026-02-10] PASS  Multiple_Visits.gpx
+[2026-02-10] START Boundary_Edge.gpx
+Monitoring boot status for iPhone 16 (BC01A0A1-E769-42C5-B790-963E39F8312C).
+Device already booted, nothing to do.
+
+Parsed 6 waypoints
+[2026-02-10] PASS  Boundary_Edge.gpx
+[2026-02-10] START Fast_Transit.gpx
+Monitoring boot status for iPhone 16 (BC01A0A1-E769-42C5-B790-963E39F8312C).
+Device already booted, nothing to do.
+
+Parsed 3 waypoints
+[2026-02-10] PASS  Fast_Transit.gpx
+[2026-02-10] START Late_Night.gpx
+Monitoring boot status for iPhone 16 (BC01A0A1-E769-42C5-B790-963E39F8312C).
+Device already booted, nothing to do.
+
+Parsed 5 waypoints
+[2026-02-10] PASS  Late_Night.gpx
+[2026-02-10] DONE GPX suite
+[2026-02-10] START T-012 permission downgrade integration test
+[2026-02-10] PASS  T-012 permission downgrade integration test
+[2026-02-10] START T-013 failure safety unit test
+[2026-02-10] PASS  T-013 failure safety unit test
+[2026-02-10] START T001 domain integration test
+[2026-02-10] PASS  T001 domain integration test
+[2026-02-10] START T002 domain integration test
+[2026-02-10] PASS  T002 domain integration test
+[2026-02-10] START T003 domain integration test
+[2026-02-10] PASS  T003 domain integration test
+[2026-02-10] START T007 domain integration test
+[2026-02-10] PASS  T007 domain integration test
+[2026-02-10] START T006 verifier test
+[2026-02-10] PASS  T006 verifier test
+[2026-02-10] START T008 verifier test
+[2026-02-10] PASS  T008 verifier test
+[2026-02-10] START T009 verifier test
+[2026-02-10] PASS  T009 verifier test
+[2026-02-10] START T010 verifier test
+[2026-02-10] PASS  T010 verifier test
+[2026-02-10] START T005 short stay domain integration test
+[2026-02-10] PASS  T005 short stay domain integration test
+[2026-02-10] START T011 multiple workplace routing test
+[2026-02-10] PASS  T011 multiple workplace routing test

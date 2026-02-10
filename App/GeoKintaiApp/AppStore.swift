@@ -2,6 +2,16 @@ import Foundation
 import SwiftUI
 import GeoKintaiCore
 
+protocol PersistenceWritePerformer {
+    func perform<T>(_ action: () -> T) throws -> T
+}
+
+struct DefaultPersistenceWritePerformer: PersistenceWritePerformer {
+    func perform<T>(_ action: () -> T) throws -> T {
+        action()
+    }
+}
+
 @MainActor
 final class AppStore: ObservableObject {
     @Published private(set) var workplaces: [Workplace] = []
@@ -9,6 +19,7 @@ final class AppStore: ObservableObject {
     @Published private(set) var corrections: [AttendanceCorrection] = []
     @Published private(set) var proofs: [LocationProof] = []
     @Published private(set) var logs: [LogEvent] = []
+    @Published private(set) var monitoredWorkplaceIds: Set<UUID> = []
 
     @Published var selectedWorkplaceId: UUID?
     @Published var permissionStatus: LocationPermissionStatus = .notDetermined {
@@ -25,21 +36,33 @@ final class AppStore: ObservableObject {
     private let permissionUseCase: PermissionUseCase
     private let exportService: ExportService
     private let logger: LoggingService
+    private let failureHandlingUseCase: FailureHandlingUseCase
     private let clock: any VerificationClock
+    private let regionMonitoringSyncService: RegionMonitoringSyncService
+    private let writePerformer: any PersistenceWritePerformer
 
     init(
         persistence: PersistenceController = PersistenceController(),
         permissionUseCase: PermissionUseCase = PermissionUseCase(),
-        clock: any VerificationClock = SystemVerificationClock()
+        clock: any VerificationClock = SystemVerificationClock(),
+        regionMonitoringSyncService: RegionMonitoringSyncService = RegionMonitoringSyncService(
+            regionMonitor: InMemoryRegionMonitor()
+        ),
+        failureHandlingUseCase: FailureHandlingUseCase = FailureHandlingUseCase(),
+        writePerformer: any PersistenceWritePerformer = DefaultPersistenceWritePerformer()
     ) {
         self.persistence = persistence
         self.permissionUseCase = permissionUseCase
         self.clock = clock
         self.exportService = ExportService(clock: clock)
         self.logger = LoggingService(clock: clock)
+        self.regionMonitoringSyncService = regionMonitoringSyncService
+        self.failureHandlingUseCase = failureHandlingUseCase
+        self.writePerformer = writePerformer
         bootstrapIfNeeded()
         evaluatePermission()
         reloadAll()
+        syncMonitoringIfNeeded()
     }
 
     func addWorkplace(name: String, latitudeText: String, longitudeText: String, radiusText: String) {
@@ -71,17 +94,23 @@ final class AppStore: ObservableObject {
             radius: radius,
             monitoringEnabled: true
         )
-        persistence.workplaces.save(workplace)
+        guard performWriteVoid({ persistence.workplaces.save(workplace) }) else {
+            return
+        }
         lastErrorMessage = nil
         reloadAll()
+        syncMonitoringIfNeeded()
     }
 
     func deleteWorkplace(id: UUID) {
-        persistence.workplaces.delete(id: id)
+        guard performWriteVoid({ persistence.workplaces.delete(id: id) }) else {
+            return
+        }
         if selectedWorkplaceId == id {
             selectedWorkplaceId = nil
         }
         reloadAll()
+        syncMonitoringIfNeeded()
     }
 
     func toggleMonitoring(id: UUID) {
@@ -90,8 +119,11 @@ final class AppStore: ObservableObject {
         }
 
         workplace.monitoringEnabled.toggle()
-        persistence.workplaces.save(workplace)
+        guard performWriteVoid({ persistence.workplaces.save(workplace) }) else {
+            return
+        }
         reloadAll()
+        syncMonitoringIfNeeded()
     }
 
     func setMonitoring(id: UUID, enabled: Bool) {
@@ -100,8 +132,11 @@ final class AppStore: ObservableObject {
         }
 
         workplace.monitoringEnabled = enabled
-        persistence.workplaces.save(workplace)
+        guard performWriteVoid({ persistence.workplaces.save(workplace) }) else {
+            return
+        }
         reloadAll()
+        syncMonitoringIfNeeded()
     }
 
     func simulateCheckIn() {
@@ -121,20 +156,25 @@ final class AppStore: ObservableObject {
         }
 
         let now = clock.now
-        let record = persistence.attendance.createOpenRecord(
-            workplaceId: workplace.id,
-            entryTime: now
-        )
-        let proof = LocationProof(
-            workplaceId: workplace.id,
-            attendanceRecordId: record.id,
-            timestamp: now,
-            latitude: workplace.latitude,
-            longitude: workplace.longitude,
-            horizontalAccuracy: 5,
-            reason: .entryTrigger
-        )
-        persistence.locationProofs.append(proof)
+        guard let record = performWrite({
+            let record = persistence.attendance.createOpenRecord(
+                workplaceId: workplace.id,
+                entryTime: now
+            )
+            let proof = LocationProof(
+                workplaceId: workplace.id,
+                attendanceRecordId: record.id,
+                timestamp: now,
+                latitude: workplace.latitude,
+                longitude: workplace.longitude,
+                horizontalAccuracy: 5,
+                reason: .entryTrigger
+            )
+            persistence.locationProofs.append(proof)
+            return record
+        }) else {
+            return
+        }
         logger.log(.didEnterRegion(workplaceId: workplace.id))
         logger.log(.stayConfirmed(recordId: record.id))
         lastErrorMessage = nil
@@ -153,24 +193,34 @@ final class AppStore: ObservableObject {
         }
 
         let now = clock.now
-        guard let closed = persistence.attendance.closeOpenRecord(
-            workplaceId: workplace.id,
-            exitTime: now
-        ) else {
+        let closeResult: AttendanceRecord?? = performWrite({
+            persistence.attendance.closeOpenRecord(
+                workplaceId: workplace.id,
+                exitTime: now
+            )
+        })
+        guard let wrappedClosed = closeResult else {
+            return
+        }
+        guard let closed = wrappedClosed else {
             lastErrorMessage = "勤務中レコードがありません。"
             return
         }
 
-        let proof = LocationProof(
-            workplaceId: workplace.id,
-            attendanceRecordId: closed.id,
-            timestamp: now,
-            latitude: workplace.latitude,
-            longitude: workplace.longitude,
-            horizontalAccuracy: 7,
-            reason: .exitCheck
-        )
-        persistence.locationProofs.append(proof)
+        guard performWriteVoid({
+            let proof = LocationProof(
+                workplaceId: workplace.id,
+                attendanceRecordId: closed.id,
+                timestamp: now,
+                latitude: workplace.latitude,
+                longitude: workplace.longitude,
+                horizontalAccuracy: 7,
+                reason: .exitCheck
+            )
+            persistence.locationProofs.append(proof)
+        }) else {
+            return
+        }
         logger.log(.didExitRegion(workplaceId: workplace.id))
         logger.log(.exitConfirmed(recordId: closed.id))
         lastErrorMessage = nil
@@ -210,7 +260,9 @@ final class AppStore: ObservableObject {
             correctedAt: draft.correctedAt,
             integrityHash: IntegrityHashService.hashCorrection(draft)
         )
-        persistence.corrections.append(correction)
+        guard performWriteVoid({ persistence.corrections.append(correction) }) else {
+            return
+        }
         reloadAll()
     }
 
@@ -241,7 +293,9 @@ final class AppStore: ObservableObject {
             radius: DomainDefaults.defaultWorkplaceRadiusMeters,
             monitoringEnabled: true
         )
-        persistence.workplaces.save(defaultWorkplace)
+        guard performWriteVoid({ persistence.workplaces.save(defaultWorkplace) }) else {
+            return
+        }
         selectedWorkplaceId = defaultWorkplace.id
     }
 
@@ -262,6 +316,7 @@ final class AppStore: ObservableObject {
             status: permissionStatus,
             requiresBackgroundRecording: true
         )
+        syncMonitoringIfNeeded()
     }
 
     private func handlePermissionBlocked() {
@@ -297,5 +352,37 @@ final class AppStore: ObservableObject {
         } catch {
             lastErrorMessage = "出力に失敗しました: \(error.localizedDescription)"
         }
+    }
+
+    private func syncMonitoringIfNeeded() {
+        let synchronizedIds = regionMonitoringSyncService.sync(
+            workplaces: persistence.workplaces.fetchAll(),
+            allowMonitoring: permissionDecision.shouldRunAutoRecording
+        )
+        monitoredWorkplaceIds = synchronizedIds
+    }
+
+    @discardableResult
+    private func performWrite<T>(_ operation: () -> T) -> T? {
+        do {
+            return try writePerformer.perform(operation)
+        } catch {
+            handlePersistenceWriteFailure(error)
+            return nil
+        }
+    }
+
+    private func handlePersistenceWriteFailure(_ error: Error) {
+        let action = failureHandlingUseCase.handle(.persistenceWriteFailed)
+        lastErrorMessage = action.userMessage
+        logger.log(.failure(type: .persistenceWriteFailed, detail: error.localizedDescription))
+
+        if action.shouldPreserveExistingData {
+            reloadAll()
+        }
+    }
+
+    private func performWriteVoid(_ operation: () -> Void) -> Bool {
+        performWrite(operation) != nil
     }
 }

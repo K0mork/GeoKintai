@@ -8,7 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		0AF24AA77AF93DB62725DD35 /* VerificationClock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89196BEA452ADD8B0E4B3BF3 /* VerificationClock.swift */; };
+		0B5C8CAEFBF034819D41ED82 /* AttendanceFlowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CA060105A1C5133DBA02441 /* AttendanceFlowCoordinator.swift */; };
 		0BAE856CE1C276DAFCF74852 /* GeoKintaiAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80168BAE45004FCB4774673A /* GeoKintaiAppTests.swift */; };
+		108C8C27ED1885C7FC3EBF7B /* AppStoreIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4279B7D86A120A0B177EEFB9 /* AppStoreIntegrationTests.swift */; };
 		109AD95292EA508511155FBE /* DateFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9DDE70F9659EFF0F8A1EF67 /* DateFormatting.swift */; };
 		1BD3F6EFBA20F8F872D740EF /* AttendanceRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C20C4485ED0873E81DC853 /* AttendanceRepository.swift */; };
 		1E5A28B7075ED9D01E780BF5 /* RegionRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A241C10504C80A1856B40A39 /* RegionRouter.swift */; };
@@ -31,6 +33,7 @@
 		D1D1DF4591CBB17B168178EA /* AttendanceCorrectionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B5C1089A1E7CB23C372C69C /* AttendanceCorrectionRepository.swift */; };
 		D1F4A65BB0E153D826D3D91F /* ExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F49523C994F8DB3031F4F7 /* ExportService.swift */; };
 		D594A349BE9509F752121054 /* GeoKintaiCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CF9A97550176F7815C57043 /* GeoKintaiCore.framework */; };
+		E2A0AA86E60EE0FC8F32B0F6 /* RegionMonitoringSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA246A72A26B2A376CF1EE5E /* RegionMonitoringSyncService.swift */; };
 		E8A3125BF45B44B8A68A8AF4 /* IntegrityHashService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA37442A58D55DB2F55BF53 /* IntegrityHashService.swift */; };
 		ECA2AABBB529DAAA6D87C117 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F960E65000508457E15B506D /* HistoryView.swift */; };
 		EFF0168E8BF1BFCEDFCC1DE8 /* AppendOnlyGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4C3826F8BBDACE198F3682 /* AppendOnlyGuard.swift */; };
@@ -98,8 +101,10 @@
 		28D4641FEDDED5292ED09FA6 /* UTCDateConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UTCDateConverter.swift; sourceTree = "<group>"; };
 		2B5C1089A1E7CB23C372C69C /* AttendanceCorrectionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttendanceCorrectionRepository.swift; sourceTree = "<group>"; };
 		31511B23BAC5A591310B5B1C /* FailureHandlingUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailureHandlingUseCase.swift; sourceTree = "<group>"; };
+		4279B7D86A120A0B177EEFB9 /* AppStoreIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreIntegrationTests.swift; sourceTree = "<group>"; };
 		4D18EA23E8EFD9E6516A989F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		53620C85502225F03E722DF2 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		6CA060105A1C5133DBA02441 /* AttendanceFlowCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttendanceFlowCoordinator.swift; sourceTree = "<group>"; };
 		76055BDB134023C5916ED5FD /* Workplace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Workplace.swift; sourceTree = "<group>"; };
 		80168BAE45004FCB4774673A /* GeoKintaiAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoKintaiAppTests.swift; sourceTree = "<group>"; };
 		80B241218C720597E04D8C87 /* StatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusView.swift; sourceTree = "<group>"; };
@@ -116,6 +121,7 @@
 		C042F1204815C956CF9E953F /* DomainDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainDefaults.swift; sourceTree = "<group>"; };
 		C4E95EA4D5F4FBA15A855258 /* AppStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStore.swift; sourceTree = "<group>"; };
 		C65E56ABB92E3EC77D380CCA /* RootTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabView.swift; sourceTree = "<group>"; };
+		CA246A72A26B2A376CF1EE5E /* RegionMonitoringSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionMonitoringSyncService.swift; sourceTree = "<group>"; };
 		CABB2D518449DBC1107785B7 /* LoggingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingService.swift; sourceTree = "<group>"; };
 		D1CB3701F9483C2C0FBF88BA /* GeoKintaiAppTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = GeoKintaiAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1ED9DEB89BE0E27EFD3B958 /* GeoKintaiApp.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = GeoKintaiApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -160,6 +166,7 @@
 		4459F6B3D6F357E03A7930A9 /* GeoKintaiAppTests */ = {
 			isa = PBXGroup;
 			children = (
+				4279B7D86A120A0B177EEFB9 /* AppStoreIntegrationTests.swift */,
 				80168BAE45004FCB4774673A /* GeoKintaiAppTests.swift */,
 			);
 			name = GeoKintaiAppTests;
@@ -196,6 +203,7 @@
 				BF4C3826F8BBDACE198F3682 /* AppendOnlyGuard.swift */,
 				E28F3F226080C9C3E2982670 /* AttendanceCorrection.swift */,
 				2B5C1089A1E7CB23C372C69C /* AttendanceCorrectionRepository.swift */,
+				6CA060105A1C5133DBA02441 /* AttendanceFlowCoordinator.swift */,
 				B0816A1C84A443EA1C6A86E0 /* AttendanceRecord.swift */,
 				B1C20C4485ED0873E81DC853 /* AttendanceRepository.swift */,
 				C042F1204815C956CF9E953F /* DomainDefaults.swift */,
@@ -208,6 +216,7 @@
 				CABB2D518449DBC1107785B7 /* LoggingService.swift */,
 				F7B4180C411ED8C1467FADF5 /* PermissionUseCase.swift */,
 				28BBD24E9D8247E15158F31C /* PersistenceController.swift */,
+				CA246A72A26B2A376CF1EE5E /* RegionMonitoringSyncService.swift */,
 				A241C10504C80A1856B40A39 /* RegionRouter.swift */,
 				193C6FA738C6F9D0067AF1F2 /* StayVerifier.swift */,
 				28D4641FEDDED5292ED09FA6 /* UTCDateConverter.swift */,
@@ -331,6 +340,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				108C8C27ED1885C7FC3EBF7B /* AppStoreIntegrationTests.swift in Sources */,
 				0BAE856CE1C276DAFCF74852 /* GeoKintaiAppTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -342,6 +352,7 @@
 				EFF0168E8BF1BFCEDFCC1DE8 /* AppendOnlyGuard.swift in Sources */,
 				D06266B6513444D13BCA199E /* AttendanceCorrection.swift in Sources */,
 				D1D1DF4591CBB17B168178EA /* AttendanceCorrectionRepository.swift in Sources */,
+				0B5C8CAEFBF034819D41ED82 /* AttendanceFlowCoordinator.swift in Sources */,
 				FAC34CA3D39B37683B980A0F /* AttendanceRecord.swift in Sources */,
 				1BD3F6EFBA20F8F872D740EF /* AttendanceRepository.swift in Sources */,
 				FF73BC02EB976C0BD150DE52 /* DomainDefaults.swift in Sources */,
@@ -354,6 +365,7 @@
 				66237319434DF46595615A87 /* LoggingService.swift in Sources */,
 				7109E1BE344FE9EB5913DD0F /* PermissionUseCase.swift in Sources */,
 				6F06F89B7382DB26D3D4F423 /* PersistenceController.swift in Sources */,
+				E2A0AA86E60EE0FC8F32B0F6 /* RegionMonitoringSyncService.swift in Sources */,
 				1E5A28B7075ED9D01E780BF5 /* RegionRouter.swift in Sources */,
 				702A8F286AB4C677C34E1AB5 /* StayVerifier.swift in Sources */,
 				6B8A3EACB4EA8A03B9A165D0 /* UTCDateConverter.swift in Sources */,

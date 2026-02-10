@@ -74,6 +74,19 @@ final class CoreLocationRegionMonitor: NSObject, BackgroundLocationClient {
         return Set(regionsByWorkplaceId.keys)
     }
 
+    func monitoredRegions() -> [UUID: MonitoredRegion] {
+        syncRegionsFromManager()
+        return regionsByWorkplaceId.reduce(into: [:]) { partial, entry in
+            let (workplaceId, region) = entry
+            partial[workplaceId] = MonitoredRegion(
+                workplaceId: workplaceId,
+                latitude: region.center.latitude,
+                longitude: region.center.longitude,
+                radius: region.radius
+            )
+        }
+    }
+
     private func syncRegionsFromManager() {
         var next: [UUID: CLCircularRegion] = [:]
         for region in locationManager.monitoredRegions {
@@ -85,9 +98,7 @@ final class CoreLocationRegionMonitor: NSObject, BackgroundLocationClient {
             }
             next[id] = circular
         }
-        if !next.isEmpty {
-            regionsByWorkplaceId = next
-        }
+        regionsByWorkplaceId = next
     }
 
     private func regionFor(workplaceId: UUID) -> CLCircularRegion? {

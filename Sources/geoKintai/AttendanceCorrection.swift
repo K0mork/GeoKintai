@@ -1,6 +1,6 @@
 import Foundation
 
-public struct AttendanceSnapshot: Equatable {
+public struct AttendanceSnapshot: Codable, Equatable {
     public var entryTime: Date
     public var exitTime: Date?
 
@@ -10,7 +10,7 @@ public struct AttendanceSnapshot: Equatable {
     }
 }
 
-public struct AttendanceCorrection: Equatable {
+public struct AttendanceCorrection: Codable, Equatable {
     public let id: UUID
     public let attendanceRecordId: UUID
     public let reason: String

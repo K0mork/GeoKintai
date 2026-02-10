@@ -1,12 +1,12 @@
 import Foundation
 
-public enum LocationProofReason: String, Equatable {
+public enum LocationProofReason: String, Codable, Equatable {
     case entryTrigger
     case stayCheck
     case exitCheck
 }
 
-public struct LocationProof: Equatable {
+public struct LocationProof: Codable, Equatable {
     public let id: UUID
     public let workplaceId: UUID
     public let attendanceRecordId: UUID

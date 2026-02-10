@@ -18,6 +18,7 @@ public protocol RegionMonitor: AnyObject {
     func startMonitoring(region: MonitoredRegion)
     func stopMonitoring(workplaceId: UUID)
     func monitoredWorkplaceIds() -> Set<UUID>
+    func monitoredRegions() -> [UUID: MonitoredRegion]
 }
 
 public final class InMemoryRegionMonitor: RegionMonitor {
@@ -38,6 +39,20 @@ public final class InMemoryRegionMonitor: RegionMonitor {
     public func monitoredWorkplaceIds() -> Set<UUID> {
         Set(regionsByWorkplaceId.keys)
     }
+
+    public func monitoredRegions() -> [UUID: MonitoredRegion] {
+        regionsByWorkplaceId
+    }
+}
+
+public struct RegionMonitoringSyncResult: Equatable {
+    public let monitoredWorkplaceIds: Set<UUID>
+    public let changedWorkplaceIds: Set<UUID>
+
+    public init(monitoredWorkplaceIds: Set<UUID>, changedWorkplaceIds: Set<UUID>) {
+        self.monitoredWorkplaceIds = monitoredWorkplaceIds
+        self.changedWorkplaceIds = changedWorkplaceIds
+    }
 }
 
 public final class RegionMonitoringSyncService {
@@ -48,7 +63,7 @@ public final class RegionMonitoringSyncService {
     }
 
     @discardableResult
-    public func sync(workplaces: [Workplace], allowMonitoring: Bool) -> Set<UUID> {
+    public func sync(workplaces: [Workplace], allowMonitoring: Bool) -> RegionMonitoringSyncResult {
         let targetRegions: [MonitoredRegion]
         if allowMonitoring {
             targetRegions = workplaces
@@ -65,17 +80,31 @@ public final class RegionMonitoringSyncService {
             targetRegions = []
         }
 
+        let targetRegionMap = Dictionary(uniqueKeysWithValues: targetRegions.map { ($0.workplaceId, $0) })
         let targetIds = Set(targetRegions.map(\.workplaceId))
-        let currentIds = regionMonitor.monitoredWorkplaceIds()
+        let currentRegions = regionMonitor.monitoredRegions()
+        let currentIds = Set(currentRegions.keys)
 
         for id in currentIds where !targetIds.contains(id) {
             regionMonitor.stopMonitoring(workplaceId: id)
         }
 
-        for region in targetRegions where !currentIds.contains(region.workplaceId) {
-            regionMonitor.startMonitoring(region: region)
+        var changedWorkplaceIds: Set<UUID> = []
+        for (workplaceId, targetRegion) in targetRegionMap {
+            if let currentRegion = currentRegions[workplaceId], currentRegion == targetRegion {
+                continue
+            }
+
+            if currentRegions[workplaceId] != nil {
+                regionMonitor.stopMonitoring(workplaceId: workplaceId)
+            }
+            regionMonitor.startMonitoring(region: targetRegion)
+            changedWorkplaceIds.insert(workplaceId)
         }
 
-        return regionMonitor.monitoredWorkplaceIds()
+        return RegionMonitoringSyncResult(
+            monitoredWorkplaceIds: regionMonitor.monitoredWorkplaceIds(),
+            changedWorkplaceIds: changedWorkplaceIds
+        )
     }
 }

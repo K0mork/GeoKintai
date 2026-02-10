@@ -36,17 +36,24 @@ struct ExportServiceTests {
         let clock = TestClock(now: Date(timeIntervalSince1970: 1_700_301_000))
         let service = ExportService(clock: clock)
         let attendance = sampleAttendance()
+        let corrections = sampleCorrections(for: attendance[0].id)
+        let proofs = sampleProofs(for: attendance[0].id, workplaceId: attendance[0].workplaceId)
 
         let payload = try service.buildExport(
             format: .pdf,
             attendance: attendance,
-            corrections: [],
-            proofs: []
+            corrections: corrections,
+            proofs: proofs
         )
 
         #expect(payload.format == .pdf)
         #expect(payload.content.contains("PDF_EXPORT"))
         #expect(payload.content.contains("generated_at"))
+        #expect(payload.content.contains("attendance_id"))
+        #expect(payload.content.contains("correction_id"))
+        #expect(payload.content.contains("proof_id"))
+        #expect(payload.content.contains("integrity_hash"))
+        #expect(ExportService.verify(content: payload.content, hash: payload.integrityHash))
     }
 
     @Test("AC-08: test_exportService_whenNoData_throwsReadableFailureReason")

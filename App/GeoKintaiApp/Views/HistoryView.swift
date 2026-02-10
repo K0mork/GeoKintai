@@ -36,6 +36,15 @@ struct HistoryView: View {
                     Text("修正履歴はありません。")
                         .foregroundStyle(.secondary)
                 } else {
+                    if !store.corruptedCorrectionIds.isEmpty {
+                        Label(
+                            "整合性不一致: \(store.corruptedCorrectionIds.count)件",
+                            systemImage: "exclamationmark.triangle.fill"
+                        )
+                        .font(.footnote)
+                        .foregroundStyle(.red)
+                    }
+
                     ForEach(store.corrections, id: \.id) { correction in
                         VStack(alignment: .leading, spacing: 4) {
                             Text(correction.correctedAt.shortDateTime)
@@ -47,6 +56,11 @@ struct HistoryView: View {
                             Text("Hash: \(correction.integrityHash)")
                                 .font(.caption2)
                                 .textSelection(.enabled)
+                            if store.corruptedCorrectionIds.contains(correction.id) {
+                                Text("この修正レコードは整合性不一致です。")
+                                    .font(.caption2)
+                                    .foregroundStyle(.red)
+                            }
                         }
                     }
                 }

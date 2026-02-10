@@ -35,6 +35,7 @@ final class AppStore: ObservableObject {
     @Published private(set) var proofs: [LocationProof] = []
     @Published private(set) var logs: [LogEvent] = []
     @Published private(set) var monitoredWorkplaceIds: Set<UUID> = []
+    @Published private(set) var corruptedCorrectionIds: Set<UUID> = []
 
     @Published var selectedWorkplaceId: UUID?
     @Published var permissionStatus: LocationPermissionStatus = .notDetermined {
@@ -546,10 +547,19 @@ final class AppStore: ObservableObject {
         corrections = persistence.corrections.fetchAll().sorted { $0.correctedAt > $1.correctedAt }
         proofs = persistence.locationProofs.fetchAll().sorted { $0.timestamp > $1.timestamp }
         logs = logger.allEvents()
+        refreshCorrectionIntegrityMismatches()
 
         if selectedWorkplaceId == nil {
             selectedWorkplaceId = workplaces.first?.id
         }
+    }
+
+    private func refreshCorrectionIntegrityMismatches() {
+        corruptedCorrectionIds = Set(
+            corrections
+                .filter { !IntegrityHashService.verifyCorrection($0, hash: $0.integrityHash) }
+                .map(\.id)
+        )
     }
 
     private func evaluatePermission() {
@@ -603,10 +613,11 @@ final class AppStore: ObservableObject {
 
     private func syncMonitoringIfNeeded() {
         let previousIds = monitoredWorkplaceIds
-        let synchronizedIds = regionMonitoringSyncService.sync(
+        let syncResult = regionMonitoringSyncService.sync(
             workplaces: persistence.workplaces.fetchAll(),
             allowMonitoring: permissionDecision.shouldRunAutoRecording
         )
+        let synchronizedIds = syncResult.monitoredWorkplaceIds
         monitoredWorkplaceIds = synchronizedIds
 
         let removedIds = previousIds.subtracting(synchronizedIds)
@@ -617,8 +628,10 @@ final class AppStore: ObservableObject {
         }
 
         if permissionDecision.shouldRunAutoRecording {
-            let newlyMonitoredIds = synchronizedIds.subtracting(previousIds)
-            for workplaceId in newlyMonitoredIds {
+            let stateRequestIds = synchronizedIds
+                .subtracting(previousIds)
+                .union(syncResult.changedWorkplaceIds)
+            for workplaceId in stateRequestIds {
                 backgroundLocationClient.requestState(for: workplaceId)
             }
         }

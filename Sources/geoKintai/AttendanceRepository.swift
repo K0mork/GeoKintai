@@ -2,9 +2,14 @@ import Foundation
 
 public final class AttendanceRepository {
     private var records: [AttendanceRecord]
+    public var onChange: (([AttendanceRecord]) -> Void)?
 
-    public init(initialRecords: [AttendanceRecord] = []) {
+    public init(
+        initialRecords: [AttendanceRecord] = [],
+        onChange: (([AttendanceRecord]) -> Void)? = nil
+    ) {
         self.records = initialRecords
+        self.onChange = onChange
     }
 
     public func createOpenRecord(workplaceId: UUID, entryTime: Date) -> AttendanceRecord {
@@ -18,6 +23,7 @@ public final class AttendanceRepository {
             exitTime: nil
         )
         records.append(record)
+        onChange?(records)
         return record
     }
 
@@ -27,6 +33,7 @@ public final class AttendanceRepository {
         }
 
         records[index].exitTime = exitTime
+        onChange?(records)
         return records[index]
     }
 

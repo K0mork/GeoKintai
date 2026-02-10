@@ -1,6 +1,6 @@
 import Foundation
 
-public struct AttendanceRecord: Equatable {
+public struct AttendanceRecord: Codable, Equatable {
     public let id: UUID
     public let workplaceId: UUID
     public let entryTime: Date

@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Workplace: Equatable {
+public struct Workplace: Codable, Equatable {
     public let id: UUID
     public var name: String
     public var latitude: Double

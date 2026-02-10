@@ -49,6 +49,10 @@
 - [x] `CoreLocation` 連携を実装し、バックグラウンド位置イベント（入域/退域/初期 inside 判定）から自動記録フローへ接続
 - [x] 起動時に監視リージョンの現在状態を取得し、職場内起動時の滞在判定開始を実装
 - [x] `AppStoreIntegrationTests` にバックグラウンド系回帰テストを追加（滞在5分確定、早期離脱、位置取得失敗）
+- [x] `PersistenceController` をストアURL対応に拡張し、再起動後のデータ復元を実装
+- [x] `RegionMonitoringSyncService` で座標/半径変更時の再監視を実装し、`requestState` 再評価を追加
+- [x] PDF出力へ勤怠/修正/証拠の詳細セクションを追加し、AC-08のCSV/PDF同等要件を満たす
+- [x] 修正履歴の整合性不一致レコードを検出し、Historyタブで識別表示を追加
 - [x] CI/ローカル実行時の主要警告を整理し、対策を実装（destination重複、AppIntents metadata、Map起因の起動警告）
 - [x] `./scripts/run_all_checks.sh` で全チェックのグリーンを確認
 - [x] ドキュメント（仕様/受け入れ基準/トレーサビリティ/テスト運用）を同期更新

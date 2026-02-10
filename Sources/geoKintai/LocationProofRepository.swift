@@ -2,13 +2,19 @@ import Foundation
 
 public final class LocationProofRepository {
     private var proofs: [LocationProof]
+    public var onChange: (([LocationProof]) -> Void)?
 
-    public init(initialProofs: [LocationProof] = []) {
+    public init(
+        initialProofs: [LocationProof] = [],
+        onChange: (([LocationProof]) -> Void)? = nil
+    ) {
         self.proofs = initialProofs
+        self.onChange = onChange
     }
 
     public func append(_ proof: LocationProof) {
         proofs.append(proof)
+        onChange?(proofs)
     }
 
     public func fetchBy(attendanceRecordId: UUID) -> [LocationProof] {

@@ -53,4 +53,8 @@ final class NoopBackgroundLocationClient: BackgroundLocationClient {
     func monitoredWorkplaceIds() -> Set<UUID> {
         Set(regionsByWorkplaceId.keys)
     }
+
+    func monitoredRegions() -> [UUID: MonitoredRegion] {
+        regionsByWorkplaceId
+    }
 }

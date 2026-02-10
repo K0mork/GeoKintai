@@ -253,6 +253,86 @@ final class AppStoreIntegrationTests: XCTestCase {
     }
 
     @MainActor
+    func testAppStore_whenDidExitAndOutsideFor2Minutes_closesRecordAndSavesProof() {
+        let clock = TestVerificationClock(now: Date(timeIntervalSince1970: 1_701_020_000))
+        let persistence = PersistenceController()
+        let workplace = Workplace(
+            id: UUID(uuidString: "33333333-AAAA-BBBB-CCCC-777777777777")!,
+            name: "Office",
+            latitude: 35.0,
+            longitude: 139.0,
+            radius: 100,
+            monitoringEnabled: true
+        )
+        persistence.workplaces.save(workplace)
+        let openRecord = persistence.attendance.createOpenRecord(
+            workplaceId: workplace.id,
+            entryTime: clock.now.addingTimeInterval(-900)
+        )
+        let backgroundClient = BackgroundLocationClientSpy()
+        let syncService = RegionMonitoringSyncService(regionMonitor: backgroundClient)
+        let store = AppStore(
+            persistence: persistence,
+            permissionUseCase: PermissionUseCase(),
+            clock: clock,
+            regionMonitoringSyncService: syncService,
+            backgroundLocationClient: backgroundClient
+        )
+        store.permissionStatus = .always
+
+        backgroundClient.emitDidExit(workplaceId: workplace.id)
+        backgroundClient.emitLocation(latitude: 35.003, longitude: 139.003)
+        clock.advance(seconds: 120)
+        backgroundClient.emitLocation(latitude: 35.003, longitude: 139.003)
+
+        let closedRecord = store.attendanceRecords.first(where: { $0.id == openRecord.id })
+        XCTAssertNotNil(closedRecord?.exitTime)
+        XCTAssertTrue(store.proofs.contains(where: { $0.attendanceRecordId == openRecord.id && $0.reason == .exitCheck }))
+        XCTAssertTrue(store.logs.contains(where: { $0.message.contains("didExitRegion") }))
+        XCTAssertTrue(store.logs.contains(where: { $0.message.contains("exitConfirmed") }))
+    }
+
+    @MainActor
+    func testAppStore_whenDidExitButReturnInside_doesNotCloseAttendance() {
+        let clock = TestVerificationClock(now: Date(timeIntervalSince1970: 1_701_030_000))
+        let persistence = PersistenceController()
+        let workplace = Workplace(
+            id: UUID(uuidString: "33333333-AAAA-BBBB-CCCC-888888888888")!,
+            name: "Office",
+            latitude: 35.0,
+            longitude: 139.0,
+            radius: 100,
+            monitoringEnabled: true
+        )
+        persistence.workplaces.save(workplace)
+        let openRecord = persistence.attendance.createOpenRecord(
+            workplaceId: workplace.id,
+            entryTime: clock.now.addingTimeInterval(-900)
+        )
+        let backgroundClient = BackgroundLocationClientSpy()
+        let syncService = RegionMonitoringSyncService(regionMonitor: backgroundClient)
+        let store = AppStore(
+            persistence: persistence,
+            permissionUseCase: PermissionUseCase(),
+            clock: clock,
+            regionMonitoringSyncService: syncService,
+            backgroundLocationClient: backgroundClient
+        )
+        store.permissionStatus = .always
+
+        backgroundClient.emitDidExit(workplaceId: workplace.id)
+        backgroundClient.emitLocation(latitude: 35.003, longitude: 139.003)
+        clock.advance(seconds: 60)
+        backgroundClient.emitLocation(latitude: 35.0, longitude: 139.0)
+        clock.advance(seconds: 180)
+        backgroundClient.emitLocation(latitude: 35.0, longitude: 139.0)
+
+        let currentRecord = store.attendanceRecords.first(where: { $0.id == openRecord.id })
+        XCTAssertNil(currentRecord?.exitTime)
+        XCTAssertFalse(store.proofs.contains(where: { $0.attendanceRecordId == openRecord.id && $0.reason == .exitCheck }))
+    }
+
+    @MainActor
     func testAppStore_whenPersistenceWriteFails_preservesExistingDataAndShowsRecoveryMessage() {
         let persistence = PersistenceController()
         let existing = Workplace(
@@ -361,6 +441,42 @@ final class AppStoreIntegrationTests: XCTestCase {
         XCTAssertEqual(updated.latitude, 34.5, accuracy: 0.0001)
         XCTAssertEqual(updated.longitude, 135.5, accuracy: 0.0001)
         XCTAssertEqual(updated.radius, 250, accuracy: 0.0001)
+    }
+
+    @MainActor
+    func testAppStore_whenUpdateWorkplaceCoordinates_requestsRegionStateAgain() {
+        let persistence = PersistenceController()
+        let workplace = Workplace(
+            id: UUID(uuidString: "66666666-AAAA-BBBB-CCCC-999999999998")!,
+            name: "Office",
+            latitude: 35.0,
+            longitude: 139.0,
+            radius: 100,
+            monitoringEnabled: true
+        )
+        persistence.workplaces.save(workplace)
+        let backgroundClient = BackgroundLocationClientSpy()
+        let syncService = RegionMonitoringSyncService(regionMonitor: backgroundClient)
+        let store = AppStore(
+            persistence: persistence,
+            permissionUseCase: PermissionUseCase(),
+            clock: SystemVerificationClock(),
+            regionMonitoringSyncService: syncService,
+            backgroundLocationClient: backgroundClient
+        )
+        store.permissionStatus = .always
+        let requestedCountBeforeUpdate = backgroundClient.requestedStateWorkplaceIds.count
+
+        store.updateWorkplace(
+            id: workplace.id,
+            name: "Office",
+            latitudeText: "35.5",
+            longitudeText: "139.5",
+            radiusText: "180"
+        )
+
+        XCTAssertGreaterThan(backgroundClient.requestedStateWorkplaceIds.count, requestedCountBeforeUpdate)
+        XCTAssertEqual(backgroundClient.requestedStateWorkplaceIds.last, workplace.id)
     }
 
     @MainActor
@@ -645,6 +761,65 @@ final class AppStoreIntegrationTests: XCTestCase {
     }
 
     @MainActor
+    func testAppStore_whenTamperedCorrectionExists_marksAsIntegrityMismatch() {
+        let persistence = PersistenceController()
+        let workplace = Workplace(
+            id: UUID(uuidString: "12121212-AAAA-BBBB-CCCC-121212121212")!,
+            name: "Office",
+            latitude: 35.0,
+            longitude: 139.0,
+            radius: 100,
+            monitoringEnabled: true
+        )
+        persistence.workplaces.save(workplace)
+        let record = persistence.attendance.createOpenRecord(
+            workplaceId: workplace.id,
+            entryTime: Date(timeIntervalSince1970: 1_700_710_000)
+        )
+
+        let mismatchCorrection = AttendanceCorrection(
+            id: UUID(uuidString: "13131313-AAAA-BBBB-CCCC-131313131313")!,
+            attendanceRecordId: record.id,
+            reason: "改ざん済み",
+            before: AttendanceSnapshot(entryTime: record.entryTime, exitTime: nil),
+            after: AttendanceSnapshot(entryTime: record.entryTime.addingTimeInterval(60), exitTime: nil),
+            correctedAt: record.entryTime.addingTimeInterval(120),
+            integrityHash: "tampered-hash"
+        )
+        persistence.corrections.append(mismatchCorrection)
+
+        let validDraft = AttendanceCorrection(
+            id: UUID(uuidString: "14141414-AAAA-BBBB-CCCC-141414141414")!,
+            attendanceRecordId: record.id,
+            reason: "正しい修正",
+            before: AttendanceSnapshot(entryTime: record.entryTime, exitTime: nil),
+            after: AttendanceSnapshot(entryTime: record.entryTime.addingTimeInterval(120), exitTime: nil),
+            correctedAt: record.entryTime.addingTimeInterval(180),
+            integrityHash: ""
+        )
+        let validCorrection = AttendanceCorrection(
+            id: validDraft.id,
+            attendanceRecordId: validDraft.attendanceRecordId,
+            reason: validDraft.reason,
+            before: validDraft.before,
+            after: validDraft.after,
+            correctedAt: validDraft.correctedAt,
+            integrityHash: IntegrityHashService.hashCorrection(validDraft)
+        )
+        persistence.corrections.append(validCorrection)
+
+        let store = AppStore(
+            persistence: persistence,
+            permissionUseCase: PermissionUseCase(),
+            clock: SystemVerificationClock(),
+            regionMonitoringSyncService: RegionMonitoringSyncService(regionMonitor: InMemoryRegionMonitor())
+        )
+
+        XCTAssertTrue(store.corruptedCorrectionIds.contains(mismatchCorrection.id))
+        XCTAssertFalse(store.corruptedCorrectionIds.contains(validCorrection.id))
+    }
+
+    @MainActor
     func testAppStore_whenExportCSVNoData_showsReadableError() {
         let persistence = PersistenceController()
         let store = AppStore(
@@ -770,6 +945,10 @@ private final class BackgroundLocationClientSpy: BackgroundLocationClient {
 
     func monitoredWorkplaceIds() -> Set<UUID> {
         Set(regionsByWorkplaceId.keys)
+    }
+
+    func monitoredRegions() -> [UUID: MonitoredRegion] {
+        regionsByWorkplaceId
     }
 
     func emitAuthorization(status: LocationPermissionStatus) {

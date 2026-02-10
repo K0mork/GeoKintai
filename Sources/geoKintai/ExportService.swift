@@ -118,13 +118,29 @@ public struct ExportService {
         proofs: [LocationProof],
         generatedAt: Date
     ) -> String {
-        [
-            "PDF_EXPORT",
-            "generated_at,\(iso8601(generatedAt))",
-            "attendance_count,\(attendance.count)",
-            "correction_count,\(corrections.count)",
-            "proof_count,\(proofs.count)"
-        ].joined(separator: "\n")
+        var lines: [String] = []
+        lines.append("PDF_EXPORT")
+        lines.append("generated_at,\(iso8601(generatedAt))")
+
+        lines.append("[attendance]")
+        lines.append("attendance_id,workplace_id,entry_time,exit_time")
+        lines.append(contentsOf: attendance.map { record in
+            "\(record.id.uuidString),\(record.workplaceId.uuidString),\(iso8601(record.entryTime)),\(iso8601Optional(record.exitTime))"
+        })
+
+        lines.append("[corrections]")
+        lines.append("correction_id,attendance_id,reason,before_entry,before_exit,after_entry,after_exit,corrected_at,record_hash")
+        lines.append(contentsOf: corrections.map { correction in
+            "\(correction.id.uuidString),\(correction.attendanceRecordId.uuidString),\(sanitize(correction.reason)),\(iso8601(correction.before.entryTime)),\(iso8601Optional(correction.before.exitTime)),\(iso8601(correction.after.entryTime)),\(iso8601Optional(correction.after.exitTime)),\(iso8601(correction.correctedAt)),\(correction.integrityHash)"
+        })
+
+        lines.append("[proofs]")
+        lines.append("proof_id,attendance_id,workplace_id,timestamp,latitude,longitude,horizontal_accuracy,reason")
+        lines.append(contentsOf: proofs.map { proof in
+            "\(proof.id.uuidString),\(proof.attendanceRecordId.uuidString),\(proof.workplaceId.uuidString),\(iso8601(proof.timestamp)),\(proof.latitude),\(proof.longitude),\(proof.horizontalAccuracy),\(proof.reason.rawValue)"
+        })
+
+        return lines.joined(separator: "\n")
     }
 
     private func sanitize(_ input: String) -> String {

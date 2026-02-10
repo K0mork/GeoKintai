@@ -25,9 +25,10 @@ struct RegionMonitoringSyncServiceTests {
         let monitor = InMemoryRegionMonitor()
         let service = RegionMonitoringSyncService(regionMonitor: monitor)
 
-        let ids = service.sync(workplaces: [workplaceA, workplaceB], allowMonitoring: true)
+        let result = service.sync(workplaces: [workplaceA, workplaceB], allowMonitoring: true)
 
-        #expect(ids == [workplaceA.id])
+        #expect(result.monitoredWorkplaceIds == [workplaceA.id])
+        #expect(result.changedWorkplaceIds == [workplaceA.id])
     }
 
     @Test("P3-012: test_regionSync_whenWorkplaceUpdated_resyncsMonitoredSet")
@@ -45,9 +46,38 @@ struct RegionMonitoringSyncServiceTests {
 
         _ = service.sync(workplaces: [workplace], allowMonitoring: true)
         workplace.monitoringEnabled = false
-        let ids = service.sync(workplaces: [workplace], allowMonitoring: true)
+        let result = service.sync(workplaces: [workplace], allowMonitoring: true)
 
-        #expect(ids.isEmpty)
+        #expect(result.monitoredWorkplaceIds.isEmpty)
+        #expect(result.changedWorkplaceIds.isEmpty)
+    }
+
+    @Test("P3-012: test_regionSync_whenWorkplaceCoordinateChanged_restartsMonitoringWithLatestRegion")
+    func test_regionSync_whenWorkplaceCoordinateChanged_restartsMonitoringWithLatestRegion() {
+        var workplace = Workplace(
+            id: UUID(uuidString: "EEEE0000-5555-5555-5555-555555555555")!,
+            name: "E",
+            latitude: 35,
+            longitude: 139,
+            radius: 100,
+            monitoringEnabled: true
+        )
+        let monitor = InMemoryRegionMonitor()
+        let service = RegionMonitoringSyncService(regionMonitor: monitor)
+
+        _ = service.sync(workplaces: [workplace], allowMonitoring: true)
+
+        workplace.latitude = 35.5
+        workplace.longitude = 139.5
+        workplace.radius = 180
+        let result = service.sync(workplaces: [workplace], allowMonitoring: true)
+
+        let monitored = monitor.monitoredRegions()[workplace.id]
+        #expect(result.monitoredWorkplaceIds == [workplace.id])
+        #expect(result.changedWorkplaceIds == [workplace.id])
+        #expect(monitored?.latitude == 35.5)
+        #expect(monitored?.longitude == 139.5)
+        #expect(monitored?.radius == 180)
     }
 
     @Test("P3-022: test_regionSync_whenPermissionDowngraded_stopsAllMonitoring")
@@ -64,8 +94,9 @@ struct RegionMonitoringSyncServiceTests {
         let service = RegionMonitoringSyncService(regionMonitor: monitor)
 
         _ = service.sync(workplaces: [workplace], allowMonitoring: true)
-        let ids = service.sync(workplaces: [workplace], allowMonitoring: false)
+        let result = service.sync(workplaces: [workplace], allowMonitoring: false)
 
-        #expect(ids.isEmpty)
+        #expect(result.monitoredWorkplaceIds.isEmpty)
+        #expect(result.changedWorkplaceIds.isEmpty)
     }
 }

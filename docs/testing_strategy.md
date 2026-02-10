@@ -64,6 +64,7 @@ xcodebuild test \
 - 既存テスト失敗は回帰として最優先で修正する。
 - 不安定テストは `sleep` と実時間依存を排除する。
 - 要件差分が原因なら実装前に `acceptance_criteria.md` を更新する。
+- `xcodebuild test` 実行時に `[ResourceManifest] Failed to locate resource "default.csv"` が出る場合がある。現状はテスト結果に影響しない既知警告として扱い、失敗時のみ追加調査する。
 
 ## 5. 品質ゲート
 - `Red -> Green -> Refactor` の履歴を追跡可能である。

@@ -32,14 +32,17 @@ if [[ -z "$simulator_udid" ]]; then
   }
 fi
 
-echo "[1/3] Running Swift package tests"
+echo "[1/4] Checking docs links"
+"$project_root/scripts/check_doc_links.sh"
+
+echo "[2/4] Running Swift package tests"
 (cd "$project_root" && swift test)
 
-echo "[2/3] Booting simulator: $simulator_udid"
+echo "[3/4] Booting simulator: $simulator_udid"
 xcrun simctl boot "$simulator_udid" >/dev/null 2>&1 || true
 xcrun simctl bootstatus "$simulator_udid" -b >/dev/null
 
-echo "[3/3] Running Xcode app tests on simulator: $simulator_udid"
+echo "[4/4] Running Xcode app tests on simulator: $simulator_udid"
 xcodebuild \
   -project "$project_file" \
   -scheme "$scheme" \

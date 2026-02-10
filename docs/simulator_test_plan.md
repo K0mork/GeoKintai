@@ -47,7 +47,7 @@
 | T-001 | 正常な出勤 | Commute_In | 勤務中へ遷移し記録作成 | AC-02 |
 | T-002 | 正常な退勤 | Commute_Out | 退勤確定し `exitTime` 記録 | AC-04 |
 | T-003 | 通過誤検知防止 | Pass_By | 出勤記録なし | AC-03 |
-| T-004 | アプリキル後挙動 | Commute_In | 参考確認（実機推奨） | AC-02 |
+| T-004 | アプリキル後挙動 | Commute_In | 実機で確認（手順は `real_device_test_plan.md`） | AC-02 |
 
 ### 4.2 エッジケース
 | ID | シナリオ | GPX | 期待値 | 対応AC |

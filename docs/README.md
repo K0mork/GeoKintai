@@ -14,6 +14,9 @@
 | [tdd_guide.md](tdd_guide.md) | 1サイクルの進め方（実務手順） | 実装中 |
 | [testing_strategy.md](testing_strategy.md) | テストレベル戦略と実行運用 | 実装中、PR前 |
 | [simulator_test_plan.md](simulator_test_plan.md) | シミュレータ検証シナリオ（T-*） | 統合確認時 |
+| [real_device_test_plan.md](real_device_test_plan.md) | 実機依存ケース（T-004）の検証手順 | 実機確認時 |
+| [test_plan.md](test_plan.md) | 旧名称互換エントリ（シミュレータ/実機計画への導線） | 旧導線参照時 |
+| [TESTING.md](TESTING.md) | 旧名称互換エントリ（testing_strategy への導線） | 旧導線参照時 |
 | [requirements_traceability.md](requirements_traceability.md) | FR/AC/Test/Task の対応表 | 変更時に都度更新 |
 | [tasks/01_core_logic.md](tasks/01_core_logic.md) | Phase 1: Core Logic 実装タスク | 開発計画時 |
 | [tasks/02_ui_implementation.md](tasks/02_ui_implementation.md) | Phase 2: UI 実装タスク | 開発計画時 |
@@ -38,7 +41,8 @@
 ### 統合確認時
 1. [testing_strategy.md](testing_strategy.md)
 2. [simulator_test_plan.md](simulator_test_plan.md)
-3. [requirements_traceability.md](requirements_traceability.md)
+3. [real_device_test_plan.md](real_device_test_plan.md)
+4. [requirements_traceability.md](requirements_traceability.md)
 
 ## 3. 同期更新ルール
 - 仕様変更時は `specification.md`、`acceptance_criteria.md`、`requirements_traceability.md` を同時更新する。

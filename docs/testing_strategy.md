@@ -43,6 +43,9 @@
 # UDID 自動検出で実行
 ./scripts/run_simulator_suite.sh
 
+# 実機ログ雛形を作成（T-004 用）
+./scripts/new_real_device_log.sh <tester> <device> <os_version>
+
 # 個別実行（必要時）
 swift test
 

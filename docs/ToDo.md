@@ -34,7 +34,7 @@
 - [x] 主要 Integration / Simulator ケースを実施
 - [ ] [simulator_test_plan.md](simulator_test_plan.md) の該当 `T-*` 結果を更新
 - [x] 要件・受け入れ基準・トレーサビリティの整合を確認
-- [ ] ドキュメントのリンク切れがない
+- [x] ドキュメントのリンク切れがない
 
 ## 6. 完了条件
 - [x] 対象 `AC-*` がすべて満たされている

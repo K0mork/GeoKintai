@@ -35,8 +35,9 @@
 1. Simulator でアプリを起動する（Debug）。
 2. `Debug > Simulate Location` で GPX を選択する。
 3. CLI 実行する場合は `scripts/run_simulator_gpx.sh <simulator_udid> <gpx_file>` を利用する。
-4. バックグラウンド確認は `Shift + Command + H` でホームへ戻す。
-5. UI状態、履歴、ログを結果表に記録する。
+4. 一括実行する場合は `scripts/run_simulator_suite.sh <simulator_udid> [log_file]` を利用する。
+5. バックグラウンド確認は `Shift + Command + H` でホームへ戻す。
+6. UI状態、履歴、ログを結果表に記録する。
 
 ## 4. ケース一覧
 

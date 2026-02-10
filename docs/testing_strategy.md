@@ -37,6 +37,9 @@
 # UDID を固定して実行したい場合
 ./scripts/run_all_checks.sh <simulator_udid>
 
+# シミュレータ検証（GPX + 主要T-*根拠テスト）
+./scripts/run_simulator_suite.sh <simulator_udid>
+
 # 個別実行（必要時）
 swift test
 

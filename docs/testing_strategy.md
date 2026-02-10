@@ -40,6 +40,9 @@
 # シミュレータ検証（GPX + 主要T-*根拠テスト）
 ./scripts/run_simulator_suite.sh <simulator_udid>
 
+# UDID 自動検出で実行
+./scripts/run_simulator_suite.sh
+
 # 個別実行（必要時）
 swift test
 

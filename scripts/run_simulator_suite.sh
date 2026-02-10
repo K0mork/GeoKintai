@@ -1,17 +1,39 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ $# -lt 1 ]]; then
-  echo "Usage: $0 <simulator_udid> [log_file]"
-  exit 1
-fi
+find_simulator_udid() {
+  local preferred_device="iPhone 16"
+  local udid=""
 
-simulator_udid="$1"
+  udid="$(xcrun simctl list devices available | awk -F '[()]' -v name="$preferred_device" '$0 ~ name" \\(" { print $2; exit }')"
+  if [[ -n "$udid" ]]; then
+    echo "$udid"
+    return 0
+  fi
+
+  udid="$(xcrun simctl list devices available | awk -F '[()]' '/iPhone/ { print $2; exit }')"
+  if [[ -n "$udid" ]]; then
+    echo "$udid"
+    return 0
+  fi
+
+  return 1
+}
+
+simulator_udid="${1:-}"
 project_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 run_date="$(date +%F)"
 timestamp="$(date +%Y%m%d_%H%M%S)"
 default_log_file="$project_root/docs/simulator_run_log_${run_date}_${timestamp}.txt"
 log_file="${2:-$default_log_file}"
+
+if [[ -z "$simulator_udid" ]]; then
+  simulator_udid="$(find_simulator_udid)" || {
+    echo "Usage: $0 [simulator_udid] [log_file]"
+    echo "No available iPhone simulator was found."
+    exit 1
+  }
+fi
 
 mkdir -p "$(dirname "$log_file")"
 

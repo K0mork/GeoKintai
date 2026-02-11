@@ -61,12 +61,14 @@ struct SettingsView: View {
                                 Button("編集") {
                                     editingWorkplaceTarget = WorkplaceEditorTarget(id: workplace.id)
                                 }
+                                .buttonStyle(.borderless)
 
                                 Spacer()
 
                                 Button("削除", role: .destructive) {
                                     store.deleteWorkplace(id: workplace.id)
                                 }
+                                .buttonStyle(.borderless)
                             }
                         }
                         .padding(.vertical, 4)

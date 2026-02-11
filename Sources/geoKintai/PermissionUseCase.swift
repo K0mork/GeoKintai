@@ -9,7 +9,6 @@ public enum LocationPermissionStatus: Equatable, Hashable, CaseIterable {
 
 public enum PermissionGuidance: Equatable, Hashable {
     case none
-    case requestAlwaysAuthorization
     case openSettings
 }
 
@@ -42,7 +41,7 @@ public struct PermissionUseCase {
         case .denied:
             return PermissionDecision(shouldRunAutoRecording: false, guidance: .openSettings)
         case .notDetermined:
-            return PermissionDecision(shouldRunAutoRecording: false, guidance: .requestAlwaysAuthorization)
+            return PermissionDecision(shouldRunAutoRecording: false, guidance: .openSettings)
         }
     }
 }

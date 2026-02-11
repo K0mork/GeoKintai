@@ -3,8 +3,8 @@ import XCTest
 
 final class GeoKintaiAppTests: XCTestCase {
     @MainActor
-    func testAppStore_bootstrapCreatesDefaultWorkplace() {
+    func testAppStore_initialLaunch_requiresWorkplaceSetup() {
         let store = AppStore()
-        XCTAssertFalse(store.workplaces.isEmpty)
+        XCTAssertTrue(store.workplaces.isEmpty)
     }
 }

@@ -8,7 +8,7 @@ struct SettingsView: View {
     @State private var newLatitude = ""
     @State private var newLongitude = ""
     @State private var newRadius = ""
-    @State private var editingWorkplace: Workplace?
+    @State private var editingWorkplaceTarget: WorkplaceEditorTarget?
 
     var body: some View {
         Form {
@@ -59,7 +59,7 @@ struct SettingsView: View {
 
                             HStack {
                                 Button("編集") {
-                                    editingWorkplace = workplace
+                                    editingWorkplaceTarget = WorkplaceEditorTarget(id: workplace.id)
                                 }
 
                                 Spacer()
@@ -82,45 +82,44 @@ struct SettingsView: View {
             }
         }
         .navigationTitle("Settings")
-        .sheet(
-            isPresented: Binding(
-                get: { editingWorkplace != nil },
-                set: { isPresented in
-                    if !isPresented {
-                        editingWorkplace = nil
-                    }
-                }
-            )
-        ) {
-            if let editingWorkplace {
-                WorkplaceEditorSheet(workplace: editingWorkplace)
-            }
+        .sheet(item: $editingWorkplaceTarget) { target in
+            WorkplaceEditorSheet(workplaceId: target.id)
         }
     }
+}
+
+private struct WorkplaceEditorTarget: Identifiable {
+    let id: UUID
 }
 
 private struct WorkplaceEditorSheet: View {
     @EnvironmentObject private var store: AppStore
     @Environment(\.dismiss) private var dismiss
 
-    let workplace: Workplace
+    let workplaceId: UUID
 
     @State private var name = ""
     @State private var latitude = ""
     @State private var longitude = ""
     @State private var radius = ""
+    @State private var isMissingWorkplace = false
 
     var body: some View {
         NavigationStack {
             Form {
                 Section("仕事場編集") {
-                    TextField("名称", text: $name)
-                    TextField("緯度", text: $latitude)
-                        .keyboardType(.decimalPad)
-                    TextField("経度", text: $longitude)
-                        .keyboardType(.decimalPad)
-                    TextField("半径(m)", text: $radius)
-                        .keyboardType(.decimalPad)
+                    if isMissingWorkplace {
+                        Text("対象の仕事場が見つかりません。閉じるを押してください。")
+                            .foregroundStyle(.red)
+                    } else {
+                        TextField("名称", text: $name)
+                        TextField("緯度", text: $latitude)
+                            .keyboardType(.decimalPad)
+                        TextField("経度", text: $longitude)
+                            .keyboardType(.decimalPad)
+                        TextField("半径(m)", text: $radius)
+                            .keyboardType(.decimalPad)
+                    }
                 }
             }
             .navigationTitle("仕事場編集")
@@ -133,7 +132,7 @@ private struct WorkplaceEditorSheet: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("保存") {
                         store.updateWorkplace(
-                            id: workplace.id,
+                            id: workplaceId,
                             name: name,
                             latitudeText: latitude,
                             longitudeText: longitude,
@@ -143,14 +142,24 @@ private struct WorkplaceEditorSheet: View {
                             dismiss()
                         }
                     }
+                    .disabled(isMissingWorkplace)
                 }
             }
         }
         .onAppear {
-            name = workplace.name
-            latitude = String(workplace.latitude)
-            longitude = String(workplace.longitude)
-            radius = String(workplace.radius)
+            loadCurrentWorkplace()
         }
+    }
+
+    private func loadCurrentWorkplace() {
+        guard let workplace = store.workplaces.first(where: { $0.id == workplaceId }) else {
+            isMissingWorkplace = true
+            return
+        }
+        isMissingWorkplace = false
+        name = workplace.name
+        latitude = String(workplace.latitude)
+        longitude = String(workplace.longitude)
+        radius = String(workplace.radius)
     }
 }

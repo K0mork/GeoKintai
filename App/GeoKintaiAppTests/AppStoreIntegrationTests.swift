@@ -5,6 +5,23 @@ import UIKit
 
 final class AppStoreIntegrationTests: XCTestCase {
     @MainActor
+    func testAppStore_whenInitialLaunchAndPermissionNotDetermined_requestsWhenInUseAuthorization() {
+        let persistence = PersistenceController()
+        let backgroundClient = BackgroundLocationClientSpy()
+        let store = AppStore(
+            persistence: persistence,
+            permissionUseCase: PermissionUseCase(),
+            clock: SystemVerificationClock(),
+            regionMonitoringSyncService: RegionMonitoringSyncService(regionMonitor: backgroundClient),
+            backgroundLocationClient: backgroundClient
+        )
+
+        store.requestLocationPermissionForInitialSetupIfNeeded()
+
+        XCTAssertEqual(backgroundClient.requestWhenInUseAuthorizationCallCount, 1)
+    }
+
+    @MainActor
     func testAppStore_whenPermissionBecomesAlways_startsMonitoringEnabledWorkplace() {
         let persistence = PersistenceController()
         let workplace = Workplace(
@@ -910,6 +927,7 @@ private final class BackgroundLocationClientSpy: BackgroundLocationClient {
     private var regionsByWorkplaceId: [UUID: MonitoredRegion] = [:]
     private var currentStatus: LocationPermissionStatus = .notDetermined
 
+    private(set) var requestWhenInUseAuthorizationCallCount = 0
     private(set) var requestAlwaysAuthorizationCallCount = 0
     private(set) var startUpdatingLocationCallCount = 0
     private(set) var stopUpdatingLocationCallCount = 0
@@ -917,6 +935,10 @@ private final class BackgroundLocationClientSpy: BackgroundLocationClient {
 
     func currentPermissionStatus() -> LocationPermissionStatus {
         currentStatus
+    }
+
+    func requestWhenInUseAuthorization() {
+        requestWhenInUseAuthorizationCallCount += 1
     }
 
     func requestAlwaysAuthorization() {

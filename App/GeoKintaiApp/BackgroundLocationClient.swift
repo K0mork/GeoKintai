@@ -17,6 +17,7 @@ protocol BackgroundLocationClient: AnyObject, RegionMonitor {
     var onLocationError: ((String) -> Void)? { get set }
 
     func currentPermissionStatus() -> LocationPermissionStatus
+    func requestWhenInUseAuthorization()
     func requestAlwaysAuthorization()
     func startUpdatingLocation()
     func stopUpdatingLocation()
@@ -37,6 +38,7 @@ final class NoopBackgroundLocationClient: BackgroundLocationClient {
         .notDetermined
     }
 
+    func requestWhenInUseAuthorization() {}
     func requestAlwaysAuthorization() {}
     func startUpdatingLocation() {}
     func stopUpdatingLocation() {}

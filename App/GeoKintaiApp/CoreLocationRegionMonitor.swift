@@ -26,6 +26,10 @@ final class CoreLocationRegionMonitor: NSObject, BackgroundLocationClient {
         Self.mapAuthorizationStatus(locationManager.authorizationStatus)
     }
 
+    func requestWhenInUseAuthorization() {
+        locationManager.requestWhenInUseAuthorization()
+    }
+
     func requestAlwaysAuthorization() {
         locationManager.requestAlwaysAuthorization()
     }

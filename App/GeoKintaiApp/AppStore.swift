@@ -43,7 +43,7 @@ final class AppStore: ObservableObject {
     }
     @Published private(set) var permissionDecision = PermissionDecision(
         shouldRunAutoRecording: false,
-        guidance: .requestAlwaysAuthorization
+        guidance: .openSettings
     )
     @Published private(set) var lastExport: ExportPayload?
     @Published var lastErrorMessage: String?
@@ -91,13 +91,9 @@ final class AppStore: ObservableObject {
         self.urlHandler = urlHandler
         configureBackgroundLocationCallbacks()
         permissionStatus = backgroundLocationClient.currentPermissionStatus()
-        bootstrapIfNeeded()
         evaluatePermission()
         reloadAll()
         syncMonitoringIfNeeded()
-        if permissionStatus == .notDetermined {
-            backgroundLocationClient.requestAlwaysAuthorization()
-        }
     }
 
     func addWorkplace(name: String, latitudeText: String, longitudeText: String, radiusText: String) {
@@ -366,6 +362,20 @@ final class AppStore: ObservableObject {
         _ = urlHandler.open(url)
     }
 
+    func refreshPermissionStatusFromSystem() {
+        permissionStatus = backgroundLocationClient.currentPermissionStatus()
+    }
+
+    func requestLocationPermissionForInitialSetupIfNeeded() {
+        guard workplaces.isEmpty else {
+            return
+        }
+        guard permissionStatus == .notDetermined else {
+            return
+        }
+        backgroundLocationClient.requestWhenInUseAuthorization()
+    }
+
     func workplaceName(for id: UUID) -> String {
         workplaces.first(where: { $0.id == id })?.name ?? id.uuidString
     }
@@ -523,24 +533,6 @@ final class AppStore: ObservableObject {
         reloadAll()
     }
 
-    private func bootstrapIfNeeded() {
-        guard persistence.workplaces.fetchAll().isEmpty else {
-            return
-        }
-
-        let defaultWorkplace = Workplace(
-            name: "本社",
-            latitude: 35.681236,
-            longitude: 139.767125,
-            radius: DomainDefaults.defaultWorkplaceRadiusMeters,
-            monitoringEnabled: true
-        )
-        guard performWriteVoid({ persistence.workplaces.save(defaultWorkplace) }) else {
-            return
-        }
-        selectedWorkplaceId = defaultWorkplace.id
-    }
-
     private func reloadAll() {
         workplaces = persistence.workplaces.fetchAll().sorted { $0.name < $1.name }
         attendanceRecords = persistence.attendance.fetchAll().sorted { $0.entryTime > $1.entryTime }
@@ -578,8 +570,6 @@ final class AppStore: ObservableObject {
 
     private func handlePermissionBlocked() {
         switch permissionDecision.guidance {
-        case .requestAlwaysAuthorization:
-            lastErrorMessage = "常時許可が必要です。権限を更新してください。"
         case .openSettings:
             lastErrorMessage = "位置権限が不足しています。設定アプリから変更してください。"
         case .none:

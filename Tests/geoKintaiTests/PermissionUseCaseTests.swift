@@ -33,4 +33,14 @@ struct PermissionUseCaseTests {
         #expect(!decision.shouldRunAutoRecording)
         #expect(decision.guidance == .openSettings)
     }
+
+    @Test("AC-09: test_permissionUseCase_whenNotDetermined_stopsAutoRecordingAndShowsSettingsGuidance")
+    func test_permissionUseCase_whenNotDetermined_stopsAutoRecordingAndShowsSettingsGuidance() {
+        let useCase = PermissionUseCase()
+
+        let decision = useCase.evaluate(status: .notDetermined, requiresBackgroundRecording: true)
+
+        #expect(!decision.shouldRunAutoRecording)
+        #expect(decision.guidance == .openSettings)
+    }
 }

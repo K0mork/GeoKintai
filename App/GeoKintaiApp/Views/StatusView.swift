@@ -12,11 +12,10 @@ struct StatusView: View {
 
         Form {
             Section("権限") {
-                Picker("位置権限", selection: $store.permissionStatus) {
-                    ForEach(LocationPermissionStatus.allCases, id: \.self) { status in
-                        Text(status.displayName).tag(status)
-                    }
-                }
+                Text("iOS位置権限: \(store.permissionStatus.displayName)")
+                Text("権限変更は iOS の設定アプリで行ってください。")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
 
                 Text(viewModel.shouldRunAutoRecording ? "自動記録: 有効" : "自動記録: 停止")
                 Text("監視中リージョン: \(viewModel.monitoredWorkplaceCount)件")
@@ -38,27 +37,6 @@ struct StatusView: View {
                 if viewModel.canOpenSettings {
                     Button("設定アプリを開く") {
                         store.openAppSettings()
-                    }
-                }
-            }
-
-            Section("勤務操作") {
-                if store.workplaces.isEmpty {
-                    Text("仕事場がありません。Settings から追加してください。")
-                        .foregroundStyle(.secondary)
-                } else {
-                    Picker("仕事場", selection: $store.selectedWorkplaceId) {
-                        ForEach(store.workplaces, id: \.id) { workplace in
-                            Text(workplace.name).tag(Optional(workplace.id))
-                        }
-                    }
-
-                    Button("出勤シミュレート") {
-                        store.simulateCheckIn()
-                    }
-
-                    Button("退勤シミュレート") {
-                        store.simulateCheckOut()
                     }
                 }
             }
@@ -158,8 +136,6 @@ private extension PermissionGuidance {
         switch self {
         case .none:
             return "なし"
-        case .requestAlwaysAuthorization:
-            return "Always 権限リクエスト"
         case .openSettings:
             return "設定アプリへ誘導"
         }
